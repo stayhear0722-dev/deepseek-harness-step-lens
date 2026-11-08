@@ -404,7 +404,9 @@ test('renders individual actions in the map and opens the zoomed detail for the 
   const groups = withClass(elements, 'dsl-map-group');
   assert.deepEqual(groups.map((group) => withClass(readTree(group).elements, 'dsl-map-box').length), [1, 3, 1, 1]);
   assert.equal(withClass(elements, 'dsl-map-link').length, groups.length - 1);
-  const stepButtons = boxes.filter((node) => node.type === 'button');
+  // Every node opens a detail view: the request, each action, and how the turn ended.
+  assert.ok(boxes.every((node) => node.type === 'button'));
+  const stepButtons = boxes.filter((node) => !['start', 'finish'].includes(node.props['data-category']));
   assert.equal(stepButtons.length, 4);
   assert.match(readTree(stepButtons[1]).text, /打开记事本\s+inspection\.log\s+说明 ·\s+查看插件加载日志/);
   assert.match(text, /点击动作打开放大详情/);

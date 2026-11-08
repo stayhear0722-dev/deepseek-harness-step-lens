@@ -2159,6 +2159,25 @@ const STRINGS = {
     overviewFailed: 'Turn failed',
     overviewReason: 'Reasoning',
     overviewPurpose: 'Description',
+    keyPurpose: 'Goal',
+    keyReason: 'Why',
+    keyAction: 'How',
+    keyResult: 'Result',
+    readLines: 'read {n} lines',
+    foundN: '{n} matches',
+    foundNone: 'no matches',
+    savedOk: 'saved',
+    ranOk: 'ran successfully',
+    fetchedN: 'got {n} characters',
+    learnWhy: 'Why the AI did this',
+    learnHow: 'What it actually did',
+    learnGot: 'What came back',
+    learnTip: 'Worth learning',
+    learnTool: 'About this tool',
+    learnNoReason: 'No reasoning was recorded right before this action.',
+    learnOriginal: 'Originals and arguments',
+    learnTranslated: 'translated locally',
+    finishDetails: 'How this turn ended',
     stepDetails: 'Step details',
     actionReasoning: 'Related reasoning summary',
     translationUnavailable: 'Local reasoning translation is temporarily unavailable. The originals are available in each action’s details.',
@@ -2252,6 +2271,25 @@ const STRINGS = {
     overviewFailed: '本轮失败',
     overviewReason: '相关思考',
     overviewPurpose: '说明',
+    keyPurpose: '目的',
+    keyReason: '思路',
+    keyAction: '做法',
+    keyResult: '结果',
+    readLines: '读到 {n} 行',
+    foundN: '找到 {n} 条',
+    foundNone: '没有找到匹配',
+    savedOk: '已写入',
+    ranOk: '执行成功',
+    fetchedN: '取回 {n} 字',
+    learnWhy: 'AI 为什么这样做',
+    learnHow: '具体做了什么',
+    learnGot: '得到了什么',
+    learnTip: '值得学的做法',
+    learnTool: '这个工具是做什么的',
+    learnNoReason: '这一步之前没有记录到相关思考。',
+    learnOriginal: '原文与参数',
+    learnTranslated: '本机翻译',
+    finishDetails: '本轮如何收尾',
     stepDetails: '具体步骤',
     actionReasoning: '相关思考摘要',
     translationUnavailable: '本地思考翻译暂不可用。原文可在动作详情中查看。',
@@ -2613,20 +2651,27 @@ const FLOW_OVERVIEW_STYLE = `
   background:color-mix(in srgb,var(--dsl-hue) 12%,var(--dsw-alias-bg-base));
   box-shadow:inset 0 0 0 1px color-mix(in srgb,var(--dsl-hue) 18%,transparent);}
 .dsl-icon svg{width:14px;height:14px;display:block;}
-.dsl-icon[data-category="read"],.dsl-icon[data-category="search"]{--dsl-hue:#2f6bf2;}
-.dsl-icon[data-category="web"]{--dsl-hue:#0e9384;}
-.dsl-icon[data-category="write"]{--dsl-hue:#c97a06;}
-.dsl-icon[data-category="run"]{--dsl-hue:#7a5af0;}
-.dsl-icon[data-category="collab"]{--dsl-hue:#d1437f;}
-.dsl-icon[data-category="answer"],.dsl-icon[data-category="deliver"],.dsl-icon[data-category="finish"]{--dsl-hue:#12a150;}
-.dsl-icon[data-category="reasoning"]{--dsl-hue:#7c8594;}
-.dsl-icon[data-category="note"]{--dsl-hue:#e2711d;}
-.dsl-icon[data-category="error"]{--dsl-hue:var(--dsw-alias-state-error-primary);}
-.dsl-icon[data-category="start"]{--dsl-hue:var(--dsw-alias-label-secondary);}
+:is(.dsl-icon,.dsl-map-box)[data-category="read"],:is(.dsl-icon,.dsl-map-box)[data-category="search"]{--dsl-hue:#2f6bf2;}
+:is(.dsl-icon,.dsl-map-box)[data-category="web"]{--dsl-hue:#0e9384;}
+:is(.dsl-icon,.dsl-map-box)[data-category="write"]{--dsl-hue:#c97a06;}
+:is(.dsl-icon,.dsl-map-box)[data-category="run"]{--dsl-hue:#7a5af0;}
+:is(.dsl-icon,.dsl-map-box)[data-category="collab"]{--dsl-hue:#d1437f;}
+:is(.dsl-icon,.dsl-map-box)[data-category="answer"],:is(.dsl-icon,.dsl-map-box)[data-category="deliver"],:is(.dsl-icon,.dsl-map-box)[data-category="finish"]{--dsl-hue:#12a150;}
+:is(.dsl-icon,.dsl-map-box)[data-category="reasoning"]{--dsl-hue:#7c8594;}
+:is(.dsl-icon,.dsl-map-box)[data-category="note"]{--dsl-hue:#e2711d;}
+:is(.dsl-icon,.dsl-map-box)[data-category="error"]{--dsl-hue:var(--dsw-alias-state-error-primary);}
+:is(.dsl-icon,.dsl-map-box)[data-category="start"]{--dsl-hue:var(--dsw-alias-label-secondary);}
 
-.dsl-map{margin:14px 0 18px;padding:14px 16px 16px;border:1px solid var(--dsw-alias-border-l1);border-radius:14px;
-  background:var(--dsw-alias-bg-layer-1);color:var(--dsw-alias-label-primary);min-width:0;}
+.dsl-map{--dsl-light:radial-gradient(ellipse 60% 80% at 0% 0%,color-mix(in srgb,#4d6bfe 16%,transparent),transparent 70%),
+    radial-gradient(ellipse 55% 75% at 100% 100%,color-mix(in srgb,#a855f7 14%,transparent),transparent 70%),
+    radial-gradient(ellipse 40% 60% at 60% 20%,color-mix(in srgb,#14b8a6 9%,transparent),transparent 70%);
+  --dsl-glass:color-mix(in srgb,var(--dsw-alias-bg-base) 58%,transparent);
+  --dsl-glass-edge:color-mix(in srgb,var(--dsw-alias-label-primary) 9%,transparent);
+  --dsl-glass-shine:color-mix(in srgb,color-mix(in srgb,var(--dsw-alias-bg-base) 30%,#fff) 45%,transparent);
+  margin:14px 0 18px;padding:14px 16px 16px;border:1px solid var(--dsw-alias-border-l1);border-radius:16px;
+  background:var(--dsl-light),var(--dsw-alias-bg-layer-1);color:var(--dsw-alias-label-primary);min-width:0;}
 .dsl-map--compact{margin:0;padding:0;border:0;background:transparent;}
+.dsl-map--compact .dsl-map-scroll{background:var(--dsl-light);border-radius:12px;}
 .dsl-map-head{display:flex;align-items:baseline;gap:4px 10px;flex-wrap:wrap;margin-bottom:12px;}
 .dsl-map-title{margin:0;font-size:14px;font-weight:650;letter-spacing:.01em;}
 .dsl-map-progress{font-size:11.5px;color:var(--dsw-alias-label-secondary);font-variant-numeric:tabular-nums;}
@@ -2639,12 +2684,17 @@ const FLOW_OVERVIEW_STYLE = `
 /* Shared card */
 .dsl-map-box{position:relative;display:grid;grid-template-columns:24px minmax(0,1fr);column-gap:10px;align-items:center;
   width:100%;min-width:0;box-sizing:border-box;padding:9px 11px;text-align:left;
-  border:1px solid var(--dsw-alias-border-l1);border-radius:10px;background:var(--dsw-alias-bg-base);
+  --dsl-hue:#94a3b8;
+  border:1px solid var(--dsl-glass-edge);border-radius:12px;
+  background:linear-gradient(140deg,color-mix(in srgb,var(--dsl-hue) 10%,transparent),transparent 55%),var(--dsl-glass);
+  -webkit-backdrop-filter:blur(16px) saturate(170%);backdrop-filter:blur(16px) saturate(170%);
+  box-shadow:inset 0 1px 0 var(--dsl-glass-shine),0 1px 2px color-mix(in srgb,var(--dsw-alias-label-primary) 5%,transparent),
+    0 6px 18px color-mix(in srgb,var(--dsw-alias-label-primary) 6%,transparent);
   font:inherit;font-size:12.5px;line-height:1.4;color:inherit;
-  transition:border-color .15s ease,box-shadow .15s ease,background .15s ease;}
+  transition:border-color .15s ease,box-shadow .15s ease,transform .15s ease;}
 button.dsl-map-box{cursor:pointer;}
-button.dsl-map-box:hover{border-color:var(--dsw-alias-border-l2);
-  box-shadow:0 2px 10px color-mix(in srgb,var(--dsw-alias-label-primary) 7%,transparent);}
+button.dsl-map-box:hover{transform:translateY(-1px);border-color:color-mix(in srgb,var(--dsl-hue) 45%,var(--dsl-glass-edge));
+  box-shadow:inset 0 1px 0 var(--dsl-glass-shine),0 10px 26px color-mix(in srgb,var(--dsl-hue) 18%,transparent);}
 .dsl-map-box:focus-visible{outline:2px solid var(--dsw-alias-brand-primary);outline-offset:2px;}
 .dsl-map-box > .dsl-icon{align-self:start;margin-top:1px;}
 .dsl-map-box--terminal > .dsl-icon{align-self:center;margin-top:0;}
@@ -2653,8 +2703,21 @@ button.dsl-map-box:hover{border-color:var(--dsw-alias-border-l2);
 .dsl-map-name{font-weight:600;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;flex:none;max-width:100%;}
 .dsl-map-subject{min-width:0;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;
   font-family:ui-monospace,SFMono-Regular,Menlo,Consolas,monospace;font-size:11px;color:var(--dsw-alias-label-secondary);}
-.dsl-map-purpose{display:-webkit-box;-webkit-box-orient:vertical;-webkit-line-clamp:2;overflow:hidden;
-  font-size:11.5px;color:var(--dsw-alias-label-secondary);overflow-wrap:anywhere;}
+.dsl-map-row{display:-webkit-box;-webkit-box-orient:vertical;-webkit-line-clamp:2;overflow:hidden;margin-top:2px;
+  font-size:11.5px;line-height:1.45;color:var(--dsw-alias-label-secondary);overflow-wrap:anywhere;}
+.dsl-map-row::before{content:attr(data-k);display:inline-block;margin-right:6px;padding:0 5px;border-radius:4px;
+  font-size:10px;font-weight:650;line-height:16px;vertical-align:1px;color:var(--dsw-alias-label-secondary);
+  background:color-mix(in srgb,var(--dsw-alias-label-primary) 6%,transparent);}
+.dsl-map-reason{color:var(--dsw-alias-label-primary);}
+.dsl-map-reason::before{color:#7a5af0;background:color-mix(in srgb,#7a5af0 12%,transparent);}
+.dsl-map-detail{-webkit-line-clamp:1;}
+.dsl-map-detail code{font-family:ui-monospace,SFMono-Regular,Menlo,Consolas,monospace;font-size:11px;
+  color:var(--dsw-alias-label-primary);}
+.dsl-map-outcome--ok::before{color:var(--dsw-alias-state-success-primary);
+  background:color-mix(in srgb,var(--dsw-alias-state-success-primary) 12%,transparent);}
+.dsl-map-outcome--error{color:var(--dsw-alias-state-error-primary);}
+.dsl-map-outcome--error::before{color:var(--dsw-alias-state-error-primary);
+  background:color-mix(in srgb,var(--dsw-alias-state-error-primary) 12%,transparent);}
 .dsl-map-status{align-self:flex-start;display:inline-flex;align-items:center;gap:5px;margin-top:4px;padding:1px 7px;border-radius:999px;
   font-size:10.5px;font-weight:600;color:var(--dsw-alias-brand-primary);
   background:color-mix(in srgb,var(--dsw-alias-brand-primary) 10%,transparent);}
@@ -2662,12 +2725,13 @@ button.dsl-map-box:hover{border-color:var(--dsw-alias-border-l2);
 .dsl-map-box--live .dsl-map-status::before{animation:dslPulse 1.4s ease-in-out infinite;}
 .dsl-map-box--error .dsl-map-status{color:var(--dsw-alias-state-error-primary);
   background:color-mix(in srgb,var(--dsw-alias-state-error-primary) 10%,transparent);}
-.dsl-map-box--live{border-color:var(--dsw-alias-brand-primary);
-  background:color-mix(in srgb,var(--dsw-alias-brand-primary) 5%,var(--dsw-alias-bg-base));
-  box-shadow:0 0 0 3px color-mix(in srgb,var(--dsw-alias-brand-primary) 16%,transparent);}
+.dsl-map-box--live{border-color:color-mix(in srgb,var(--dsw-alias-brand-primary) 70%,transparent);
+  background:linear-gradient(140deg,color-mix(in srgb,var(--dsw-alias-brand-primary) 14%,transparent),transparent 60%),var(--dsl-glass);
+  box-shadow:inset 0 1px 0 var(--dsl-glass-shine),0 0 0 3px color-mix(in srgb,var(--dsw-alias-brand-primary) 15%,transparent),
+    0 10px 26px color-mix(in srgb,var(--dsw-alias-brand-primary) 18%,transparent);}
 .dsl-map-box--error{border-color:color-mix(in srgb,var(--dsw-alias-state-error-primary) 60%,var(--dsw-alias-border-l1));}
 .dsl-map-box--terminal{display:inline-grid;grid-template-columns:22px auto;column-gap:8px;align-items:center;width:auto;padding:5px 12px 5px 6px;
-  border-radius:999px;background:var(--dsw-alias-bg-base);}
+  border-radius:999px;}
 .dsl-map-box--terminal .dsl-icon{width:22px;height:22px;border-radius:50%;}
 .dsl-map-box--terminal .dsl-map-name{font-weight:600;font-size:12px;}
 @keyframes dslPulse{0%,100%{opacity:1;transform:scale(1);}50%{opacity:.35;transform:scale(.78);}}
@@ -2675,7 +2739,7 @@ button.dsl-map-box:hover{border-color:var(--dsw-alias-border-l2);
 /* Full view: one column per step, read left to right */
 .dsl-map-scroll{padding:5px 6px 8px 4px;}
 .dsl-map-track{display:flex;align-items:flex-start;gap:0;width:max-content;min-width:100%;box-sizing:border-box;padding-right:8px;}
-.dsl-map-group{position:relative;display:flex;flex-direction:column;gap:6px;flex:none;width:200px;}
+.dsl-map-group{position:relative;display:flex;flex-direction:column;gap:6px;flex:none;width:236px;}
 .dsl-map-group--terminal{width:auto;padding-top:22px;}
 .dsl-map-group-label{height:16px;font-size:11px;font-weight:600;color:var(--dsw-alias-label-secondary);
   font-variant-numeric:tabular-nums;letter-spacing:.02em;}
@@ -2690,9 +2754,9 @@ button.dsl-map-box:hover{border-color:var(--dsw-alias-border-l2);
 /* Compact popover: a vertical rail */
 .dsl-map--compact .dsl-map-head{margin-bottom:10px;}
 .dsl-map--compact .dsl-map-hint{display:none;}
-.dsl-map--compact .dsl-map-scroll{max-height:min(380px,52vh);padding:2px 4px 4px 2px;}
+.dsl-map--compact .dsl-map-scroll{max-height:min(420px,56vh);padding:10px 10px 10px 8px;}
 .dsl-map--compact .dsl-map-track{display:block;width:auto;min-width:0;position:relative;}
-.dsl-map--compact .dsl-map-track::before{content:"";position:absolute;left:23px;top:16px;bottom:16px;width:2px;
+.dsl-map--compact .dsl-map-track::before{content:"";position:absolute;left:23px;z-index:0;top:16px;bottom:16px;width:2px;
   border-radius:1px;background:var(--dsw-alias-border-l1);}
 .dsl-map--compact .dsl-map-group{width:auto;gap:6px;padding:0 0 10px 0;}
 .dsl-map--compact .dsl-map-group--terminal{padding:0 0 10px 6px;}
@@ -2701,12 +2765,16 @@ button.dsl-map-box:hover{border-color:var(--dsw-alias-border-l2);
 .dsl-map--compact .dsl-map-items{gap:6px;}
 .dsl-map--compact .dsl-map-box:not(.dsl-map-box--terminal){position:relative;}
 .dsl-map--compact .dsl-map-link{display:none;}
-.dsl-map--compact .dsl-map-box--terminal{background:var(--dsw-alias-bg-base);}
+
 
 .dsl-zoom-backdrop{position:fixed;inset:0;z-index:1200;display:flex;align-items:center;justify-content:center;
   padding:24px;background:color-mix(in srgb,var(--dsw-alias-bg-base) 68%,transparent);backdrop-filter:blur(3px);}
 .dsl-zoom{box-sizing:border-box;width:min(980px,94vw);max-height:88vh;display:flex;flex-direction:column;
-  border:1px solid var(--dsw-alias-border-l2);border-radius:14px;background:var(--dsw-alias-bg-base);
+  border:1px solid color-mix(in srgb,var(--dsw-alias-label-primary) 10%,transparent);border-radius:18px;
+  background:radial-gradient(ellipse 70% 50% at 0% 0%,color-mix(in srgb,#4d6bfe 12%,transparent),transparent 70%),
+    radial-gradient(ellipse 60% 50% at 100% 100%,color-mix(in srgb,#a855f7 10%,transparent),transparent 70%),
+    color-mix(in srgb,var(--dsw-alias-bg-base) 86%,transparent);
+  -webkit-backdrop-filter:blur(24px) saturate(160%);backdrop-filter:blur(24px) saturate(160%);
   color:var(--dsw-alias-label-primary);overflow:hidden;
   box-shadow:0 20px 60px color-mix(in srgb,var(--dsw-alias-label-primary) 18%,transparent);}
 .dsl-zoom-head{flex:none;display:flex;align-items:flex-start;gap:12px;padding:14px 18px;
@@ -2737,6 +2805,32 @@ button.dsl-map-box:hover{border-color:var(--dsw-alias-border-l2);
 .dsl-zoom-events .dsl-event-detail{border-top:0;}
 .dsl-zoom-events .dsl-original-text{max-height:none;}
 .dsl-zoom-events .dsl-event-data pre{max-height:none;}
+.dsl-learn{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:10px;}
+@container (max-width: 640px){.dsl-learn{grid-template-columns:minmax(0,1fr);}}
+@media (max-width: 640px){.dsl-learn{grid-template-columns:minmax(0,1fr);}}
+.dsl-learn-section{--dsl-hue:#4d6bfe;min-width:0;padding:12px 14px;border-radius:12px;
+  border:1px solid color-mix(in srgb,var(--dsw-alias-label-primary) 8%,transparent);
+  background:linear-gradient(140deg,color-mix(in srgb,var(--dsl-hue) 11%,transparent),transparent 60%),
+    color-mix(in srgb,var(--dsw-alias-bg-base) 60%,transparent);
+  box-shadow:inset 0 1px 0 color-mix(in srgb,color-mix(in srgb,var(--dsw-alias-bg-base) 30%,#fff) 45%,transparent);}
+.dsl-learn-section--why{--dsl-hue:#7a5af0;grid-column:1 / -1;}
+.dsl-learn-section--how{--dsl-hue:#2f6bf2;}
+.dsl-learn-section--got{--dsl-hue:#12a150;}
+.dsl-learn-section--error{--dsl-hue:var(--dsw-alias-state-error-primary);}
+.dsl-learn-section--tip{--dsl-hue:#c97a06;grid-column:1 / -1;}
+.dsl-learn-label{display:flex;align-items:center;gap:8px;margin:0 0 6px;font-size:12px;font-weight:700;color:var(--dsl-hue);}
+.dsl-learn-label::before{content:"";width:6px;height:6px;border-radius:50%;background:currentColor;}
+.dsl-learn-note{font-size:10.5px;font-weight:500;color:var(--dsw-alias-label-secondary);padding:0 6px;border-radius:4px;
+  background:color-mix(in srgb,var(--dsw-alias-label-primary) 6%,transparent);}
+.dsl-learn-text{margin:0;font-size:14px;line-height:1.7;overflow-wrap:anywhere;}
+.dsl-learn-section--why .dsl-learn-text{font-size:15px;}
+.dsl-learn-text--muted{color:var(--dsw-alias-label-secondary);font-size:13px;}
+.dsl-learn-sub{margin:8px 0 0;font-size:12.5px;line-height:1.65;color:var(--dsw-alias-label-secondary);}
+.dsl-learn-sub strong{color:var(--dsw-alias-label-primary);font-weight:600;}
+.dsl-learn-code{margin:8px 0 0;padding:8px 10px;border-radius:8px;white-space:pre-wrap;overflow-wrap:anywhere;max-height:180px;overflow:auto;
+  font-family:ui-monospace,SFMono-Regular,Menlo,Consolas,monospace;font-size:12px;line-height:1.55;
+  background:color-mix(in srgb,var(--dsw-alias-label-primary) 5%,transparent);}
+.dsl-learn-original{margin:6px 0 -2px;font-size:12px;font-weight:600;color:var(--dsw-alias-label-secondary);}
 `;
 
 function describeMapStep(step, t) {
@@ -2748,12 +2842,50 @@ function describeMapStep(step, t) {
   return { title: t(event ? 'note.' + event.noteKind : 'status.' + (step.live ? 'thinking' : 'unknown')), category: 'note' };
 }
 
+/** The literal thing an action did: the pattern, the command, the replaced text. */
+function concreteAction(item) {
+  const a = item.args || {};
+  const one = (value, n) => clip(firstLine(String(value), 400), n);
+  if (typeof a.command === 'string' && a.command.trim()) {
+    // Short commands teach at a glance; long scripts stay in the zoomed learning card.
+    const command = a.command.trim();
+    return command.length <= 48 && !/[\r\n]/.test(command) ? command : '';
+  }
+  if (typeof a.old_string === 'string' && typeof a.new_string === 'string') {
+    return one(a.old_string, 26) + '  →  ' + one(a.new_string, 26);
+  }
+  if (typeof a.pattern === 'string') return [one(a.pattern, 40), a.glob || a.include || ''].filter(Boolean).join('  ');
+  if (typeof a.query === 'string') return one(a.query, 60);
+  if (typeof a.url === 'string') return one(a.url, 60);
+  if (typeof a.offset === 'number' || typeof a.limit === 'number') {
+    return 'L' + (a.offset || 1) + (a.limit ? '–' + ((a.offset || 1) + a.limit - 1) : '');
+  }
+  return '';
+}
+
+/** One line on what the action returned, so the reader sees cause and effect. */
+function actionOutcome(item, t) {
+  if (item.status === 'error') return { text: clip(firstLine(item.error || item.result || t('status.failed'), 300), 60), tone: 'error' };
+  if (item.status !== 'ok') return null;
+  // A plain-language summary; the raw output stays in the zoomed learning card.
+  const result = typeof item.result === 'string' ? item.result.trim() : '';
+  const lines = result ? result.split(/\r?\n/).filter((line) => line.trim()).length : 0;
+  if (item.category === 'read') return result ? { text: t('readLines', { n: lines }), tone: 'ok' } : null;
+  if (item.category === 'search') return { text: lines ? t('foundN', { n: lines }) : t('foundNone'), tone: 'ok' };
+  if (item.category === 'write') return { text: t('savedOk'), tone: 'ok' };
+  if (item.category === 'run') return { text: t('ranOk'), tone: 'ok' };
+  if (item.category === 'web') return result ? { text: t('fetchedN', { n: result.length }), tone: 'ok' } : null;
+  return { text: t('status.done'), tone: 'ok' };
+}
+
+const same = (a, b) => !!a && !!b && a.replace(/[\s\p{P}]/gu, '') === b.replace(/[\s\p{P}]/gu, '');
+
 function flowNodes(turn, t, lang, actionContext) {
   const activeStep = turn.live ? turn.steps.findLast((step) => step.live || step.running || step.pending) : null;
   const activeAction = activeStep?.items.findLast((item) => item.kind === 'tool' && item.status === 'running')
     || activeStep?.items.findLast((item) => item.kind === 'tool' && item.status === 'pending');
   const activeKey = activeAction?.key || (activeStep ? 'step-' + activeStep.step : null);
-  const nodes = [{ key: 'start', title: t('overviewStart'), category: 'start' }];
+  const nodes = [{ key: 'start', title: t('overviewStart'), category: 'start', zoom: 'request' }];
   const shownReasoning = new Set();
   for (const step of turn.steps) {
     const actions = step.items.filter((item) => item.kind === 'tool');
@@ -2766,7 +2898,8 @@ function flowNodes(turn, t, lang, actionContext) {
       );
       const reason = reasoning && (!shownReasoning.has(reasoning) || action.key === activeKey) ? reasoning : '';
       const purpose = distinctDescription ? description : reason;
-      if (purpose && !distinctDescription) shownReasoning.add(reasoning);
+      if (reason) shownReasoning.add(reasoning);
+      const detail = concreteAction(action);
       nodes.push({
         key: action.key,
         actionKey: action.key,
@@ -2776,6 +2909,10 @@ function flowNodes(turn, t, lang, actionContext) {
         category: action.category,
         purpose,
         purposeLabel: t(distinctDescription ? 'overviewPurpose' : 'overviewReason'),
+        purposeKey: t(distinctDescription ? 'keyPurpose' : 'keyReason'),
+        reason: distinctDescription && reason && !same(reason, description) ? reason : '',
+        detail: detail && !same(detail, subject) && !same(detail, title) ? detail : '',
+        outcome: actionOutcome(action, t),
         tone: action.status === 'error' ? 'error' : action.key === activeKey ? 'live' : '',
         status: action.status === 'error' || action.status === 'running' || action.status === 'pending'
           ? t(TOOL_STATUS[action.status])
@@ -2794,7 +2931,7 @@ function flowNodes(turn, t, lang, actionContext) {
     }
   }
   if (turn.hasError || turn.status === 'closed') {
-    nodes.push({ key: 'finish', category: 'finish', tone: turn.hasError ? 'error' : '', title: t(turn.hasError ? 'overviewFailed' : 'overviewEnd') });
+    nodes.push({ key: 'finish', category: 'finish', zoom: 'finish', tone: turn.hasError ? 'error' : '', title: t(turn.hasError ? 'overviewFailed' : 'overviewEnd') });
   }
   return { nodes, activeKey };
 }
@@ -2886,7 +3023,7 @@ function FlowOverview({ turn, t, lang, compact = false, visible = true, actionCo
   const renderBox = (node) => {
     const stepNumber = node.step == null ? '' : t('stepNumber', { k: node.step });
     const badge = [stepNumber, node.status].filter(Boolean).join(' · ');
-    const actionable = onStep && node.step != null;
+    const actionable = !!onStep && (node.step != null || !!node.zoom);
     const current = node.key === activeKey;
     const terminal = node.category === 'start' || node.category === 'finish';
     const purposePreview = lang === 'zh'
@@ -2905,7 +3042,7 @@ function FlowOverview({ turn, t, lang, compact = false, visible = true, actionCo
           'data-category': node.category,
           'aria-current': current ? 'step' : undefined,
           title: [badge, node.title, node.subject, node.purpose ? node.purposeLabel + ' · ' + node.purpose : ''].filter(Boolean).join(' · '),
-          ...(actionable ? { type: 'button', onClick: () => onStep(node.step, node.actionKey) } : {}),
+          ...(actionable ? { type: 'button', onClick: () => onStep(node.step ?? null, node.actionKey, node.zoom) } : {}),
         },
         h(CategoryIcon, { category: node.category, error: node.tone === 'error' && !terminal }),
         h(
@@ -2919,7 +3056,16 @@ function FlowOverview({ turn, t, lang, compact = false, visible = true, actionCo
             node.subject ? h('span', { className: 'dsl-map-subject' }, node.subject) : null,
           ),
           node.purpose
-            ? h('span', { className: 'dsl-map-purpose' }, h('span', { className: 'dsl-sr' }, node.purposeLabel + ' · '), purposePreview)
+            ? h('span', { className: 'dsl-map-row dsl-map-purpose', 'data-k': node.purposeKey }, h('span', { className: 'dsl-sr' }, node.purposeLabel + ' · '), purposePreview)
+            : null,
+          node.reason
+            ? h('span', { className: 'dsl-map-row dsl-map-reason', 'data-k': t('keyReason') }, clip(node.reason, lang === 'zh' ? 60 : 110))
+            : null,
+          node.detail
+            ? h('span', { className: 'dsl-map-row dsl-map-detail', 'data-k': t('keyAction') }, h('code', null, node.detail))
+            : null,
+          node.outcome
+            ? h('span', { className: 'dsl-map-row dsl-map-outcome dsl-map-outcome--' + node.outcome.tone, 'data-k': t('keyResult') }, node.outcome.text)
             : null,
           node.status ? h('span', { className: 'dsl-map-status', 'aria-hidden': true }, node.status) : null,
         ),
@@ -3244,6 +3390,29 @@ function findZoomItem(items, key) {
 }
 
 /** Title used by the zoom dialog for one flow node. */
+/** Turn a clicked node into what the zoom dialog should show. */
+function resolveZoom(turn, target) {
+  if (!target) return null;
+  if (target.kind === 'request') return { request: turn.goal || '', step: { step: 0, items: [] }, actionKey: null };
+  if (target.kind === 'finish') {
+    const step = turn.steps.findLast((entry) => entry.messageCount > 0 || entry.hasError) || turn.steps.at(-1);
+    return step ? { step, actionKey: null, finish: true } : null;
+  }
+  const step = turn.steps.find((entry) => entry.step === target.step);
+  return step ? { step, actionKey: target.actionKey } : null;
+}
+
+/** Kicker and title for the zoom dialog. */
+function zoomHeading(turn, zoom, t, lang, actionContext) {
+  const turnName = t('turnN', { n: turn.turn });
+  if (zoom.request != null) return { kicker: turnName, title: t('requestDetails') };
+  if (zoom.finish) return { kicker: turnName, title: t('finishDetails') };
+  return {
+    kicker: [turnName, t('stepN', { k: zoom.step.step, total: turn.stepCount })].join(' · '),
+    title: zoomTargetTitle(turn, zoom.step, zoom.actionKey, t, lang, actionContext),
+  };
+}
+
 function zoomTargetTitle(turn, step, actionKey, t, lang, actionContext) {
   const item = actionKey ? findZoomItem(step.items, actionKey) : null;
   if (!item) return t('stepN', { k: step.step, total: turn.stepCount });
@@ -3255,8 +3424,47 @@ function zoomTargetTitle(turn, step, actionKey, t, lang, actionContext) {
  * Full, unscaled detail for one flow node: a large node header plus the
  * complete event list with every collapsible section already open.
  */
+function LearnSection({ label, tone, children, note }) {
+  return h(
+    'section',
+    { className: 'dsl-learn-section' + (tone ? ' dsl-learn-section--' + tone : '') },
+    h('h4', { className: 'dsl-learn-label' }, label, note ? h('span', { className: 'dsl-learn-note' }, note) : null),
+    children,
+  );
+}
+
+/** Reasoning → action → result for one action, written for someone learning from it. */
+function LearnCard({ item, t, lang, actionContext }) {
+  const reason = actionContext.summaries.get(item.key);
+  const description = actionContext.descriptions.get(item.key);
+  const translated = lang === 'zh' && !!reason && !/\p{Script=Han}/u.test(item.priorReasoning || '');
+  const detail = item.args && typeof item.args.command === 'string' ? item.args.command.trim() : concreteAction(item);
+  const outcome = actionOutcome(item, t);
+  const result = item.status === 'error' ? item.error || item.result : item.result;
+  return h(
+    'div',
+    { className: 'dsl-learn' },
+    h(LearnSection, { label: t('learnWhy'), tone: 'why', note: translated ? t('learnTranslated') : '' },
+      h('p', { className: 'dsl-learn-text' + (reason ? '' : ' dsl-learn-text--muted') }, reason || t('learnNoReason'))),
+    h(LearnSection, { label: t('learnHow'), tone: 'how' },
+      description ? h('p', { className: 'dsl-learn-text' }, description) : null,
+      detail ? h('pre', { className: 'dsl-learn-code' }, detail) : null,
+      item.what ? h('p', { className: 'dsl-learn-sub' }, h('strong', null, t('learnTool') + '：'), item.what) : null),
+    outcome || result
+      ? h(LearnSection, { label: t('learnGot'), tone: outcome?.tone === 'error' ? 'error' : 'got' },
+          outcome ? h('p', { className: 'dsl-learn-text' }, outcome.text) : null,
+          result ? h('pre', { className: 'dsl-learn-code dsl-learn-code--result' }, clip(result, 1200)) : null)
+      : null,
+    item.why ? h(LearnSection, { label: t('learnTip'), tone: 'tip' }, h('p', { className: 'dsl-learn-text' }, item.why)) : null,
+  );
+}
+
 function ZoomContent(props) {
-  const { turn, step, actionKey, t, lang, actionContext, onLocate } = props;
+  const { turn, step, actionKey, t, lang, actionContext, onLocate, request } = props;
+  if (request != null) {
+    return h('div', { className: 'dsl-zoom-content' },
+      h(LearnSection, { label: t('goalLabel'), tone: 'how' }, renderMarkdown(request || t('untitledTurn'))));
+  }
   if (!step) return null;
   const item = actionKey ? findZoomItem(step.items, actionKey) : null;
   const action = item ? describeToolAction(item, lang, t, actionContext.descriptions.get(item.key)) : null;
@@ -3303,7 +3511,8 @@ function ZoomContent(props) {
         metaParts.length ? h('div', { className: 'dsl-zoom-node-meta' }, metaParts.join(' · ')) : null,
       ),
     ),
-    h('p', { className: 'dsl-zoom-note' }, t('zoomHint')),
+    item && item.kind === 'tool' ? h(LearnCard, { item, t, lang, actionContext }) : null,
+    item ? h('h4', { className: 'dsl-learn-original' }, t('learnOriginal')) : h('p', { className: 'dsl-zoom-note' }, t('zoomHint')),
     onLocate
       ? h(
           'div',
@@ -3433,28 +3642,28 @@ function TurnDetail({ t, lang, turn, isLatest, live, now, previousTurn, onBackTo
   const statusClass = turn.hasError ? ' dsl-status--error' : live ? ' dsl-status--live' : '';
   const duration = turn.durationMs ?? (turn.startTime != null && live ? Math.max(0, now - turn.startTime) : null);
   const request = firstLine(turn.goal, 100);
-  const zoomStep = zoomTarget ? turn.steps.find((entry) => entry.step === zoomTarget.step) : null;
+  const zoom = resolveZoom(turn, zoomTarget);
   const zoomDialog =
-    zoomTarget && zoomStep
+    zoom
       ? h(
           ZoomDialog,
           {
             t,
-            kicker: [t('turnN', { n: turn.turn }), t('stepN', { k: zoomStep.step, total: turn.stepCount })].join(' · '),
-            title: zoomTargetTitle(turn, zoomStep, zoomTarget.actionKey, t, lang, actionContext),
+            ...zoomHeading(turn, zoom, t, lang, actionContext),
             onClose: () => setZoomTarget(null),
           },
           h(ZoomContent, {
             turn,
-            step: zoomStep,
-            actionKey: zoomTarget.actionKey,
+            step: zoom.step,
+            actionKey: zoom.actionKey,
+            request: zoom.request,
             t,
             lang,
             actionContext,
-            onLocate: () => {
+            onLocate: zoom.request != null ? undefined : () => {
               const target = zoomTarget;
               setZoomTarget(null);
-              setTimeout(() => jumpToStep(target.step, target.actionKey), 0);
+              setTimeout(() => jumpToStep(zoom.step.step, target.actionKey), 0);
             },
           }),
         )
@@ -3483,7 +3692,7 @@ function TurnDetail({ t, lang, turn, isLatest, live, now, previousTurn, onBackTo
         turn.toolErrorCount > 0 ? h(Chip, null, t('toolErrors', { n: turn.toolErrorCount })) : null,
       ),
     ),
-    h(FlowOverview, { turn, t, lang, actionContext, onStep: (stepNumber, actionKey) => setZoomTarget({ step: stepNumber, actionKey }) }),
+    h(FlowOverview, { turn, t, lang, actionContext, onStep: (stepNumber, actionKey, kind) => setZoomTarget(kind ? { kind } : { step: stepNumber, actionKey }) }),
     h(
       'div',
       { className: 'dsl-flow-head' },
@@ -3841,7 +4050,7 @@ function QuickFlow(props) {
 
   if (!turn) return null;
 
-  const zoomStep = zoomTarget ? turn.steps.find((entry) => entry.step === zoomTarget.step) : null;
+  const zoom = resolveZoom(turn, zoomTarget);
 
   const title = t('quickFlowTitle');
   const turnName = t('turnN', { n: turn.turn });
@@ -3909,20 +4118,19 @@ function QuickFlow(props) {
         compact: true,
         visible: open,
         actionContext,
-        onStep: (stepNumber, actionKey) => {
+        onStep: (stepNumber, actionKey, kind) => {
           const popup = popupRef.current;
           if (popup && popup.matches(':popover-open')) popup.hidePopover();
-          setZoomTarget({ step: stepNumber, actionKey });
+          setZoomTarget(kind ? { kind } : { step: stepNumber, actionKey });
         },
       }),
     ),
-    zoomTarget && zoomStep
+    zoom
       ? h(
           ZoomDialog,
           {
             t,
-            kicker: [t('turnN', { n: turn.turn }), t('stepN', { k: zoomStep.step, total: turn.stepCount })].join(' · '),
-            title: zoomTargetTitle(turn, zoomStep, zoomTarget.actionKey, t, lang, actionContext),
+            ...zoomHeading(turn, zoom, t, lang, actionContext),
             onClose: () => {
               setZoomTarget(null);
               triggerRef.current?.focus({ preventScroll: true });
@@ -3930,8 +4138,9 @@ function QuickFlow(props) {
           },
           h(ZoomContent, {
             turn,
-            step: zoomStep,
-            actionKey: zoomTarget.actionKey,
+            step: zoom.step,
+            actionKey: zoom.actionKey,
+            request: zoom.request,
             t,
             lang,
             actionContext,
