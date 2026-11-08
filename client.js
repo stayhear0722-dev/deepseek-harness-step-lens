@@ -2338,7 +2338,8 @@ const STRINGS = {
 const STYLE = `
 .dsl-root{container-type:inline-size;display:flex;flex-direction:column;height:100%;min-height:0;background:var(--dsw-alias-bg-base);color:var(--dsw-alias-label-primary);font-size:14px;line-height:1.62;}
 .dsl-header{flex:none;display:flex;align-items:center;gap:12px;padding:12px 20px 10px;border-bottom:1px solid var(--dsw-alias-border-l1);}
-.dsl-logo{width:34px;height:34px;border-radius:10px;display:flex;align-items:center;justify-content:center;font-size:18px;background:var(--dsw-alias-bg-layer-2);border:1px solid var(--dsw-alias-border-l1);flex:none;}
+.dsl-logo{width:34px;height:34px;flex:none;display:block;}
+.dsl-logo svg{width:100%;height:100%;display:block;}
 .dsl-heading{flex:1;min-width:0;}
 .dsl-h2{margin:0;font-size:15px;font-weight:600;}
 .dsl-sub{margin:1px 0 0;font-size:12px;color:var(--dsw-alias-label-secondary);}
@@ -2420,7 +2421,9 @@ const STYLE = `
 .dsl-flow-request{margin:2px 0 0;color:var(--dsw-alias-label-secondary);font-size:12px;overflow-wrap:anywhere;}
 .dsl-event{border-top:1px solid var(--dsw-alias-border-l1);padding:6px 10px;min-width:0;}
 .dsl-event-main{display:flex;align-items:baseline;gap:5px 8px;flex-wrap:wrap;}
-.dsl-event-icon{width:16px;flex:none;text-align:center;font-size:12px;}
+.dsl-event-icon{flex:none;align-self:center;}
+.dsl-event-icon .dsl-icon{width:20px;height:20px;border-radius:6px;}
+.dsl-event-icon .dsl-icon svg{width:12px;height:12px;}
 .dsl-event-title{font-size:13px;font-weight:600;overflow-wrap:anywhere;}
 .dsl-event-subject{color:var(--dsw-alias-label-secondary);font-size:12px;overflow-wrap:anywhere;min-width:0;}
 .dsl-event-status{margin-left:auto;color:var(--dsw-alias-label-secondary);font-size:11px;white-space:nowrap;}
@@ -2456,7 +2459,8 @@ const STYLE = `
   .dsl-event-detail{margin-left:0;}
 }
 .dsl-empty{max-width:540px;margin:56px auto 0;text-align:center;color:var(--dsw-alias-label-secondary);}
-.dsl-empty-icon{font-size:34px;display:block;margin-bottom:10px;}
+.dsl-empty-icon{display:block;width:44px;height:44px;margin:0 auto 12px;}
+.dsl-empty-icon svg{width:100%;height:100%;display:block;}
 .dsl-empty-title{font-size:15px;font-weight:600;color:var(--dsw-alias-label-primary);margin:0 0 6px;}
 .dsl-empty-body{font-size:13px;line-height:1.75;margin:0;}
 .dsl-empty-steps{padding:14px;border:1px dashed var(--dsw-alias-border-l2);border-radius:9px;text-align:center;font-size:12px;color:var(--dsw-alias-label-secondary);}
@@ -2603,66 +2607,102 @@ function Chip(props) {
 }
 
 const FLOW_OVERVIEW_STYLE = `
-.dsl-map{margin:13px 0 15px;padding:10px 12px 12px;border:1px solid var(--dsw-alias-border-l1);
-  border-radius:12px;background:var(--dsw-alias-bg-layer-1);color:var(--dsw-alias-label-primary);min-width:0;}
+.dsl-sr{position:absolute;width:1px;height:1px;padding:0;margin:-1px;overflow:hidden;clip:rect(0 0 0 0);white-space:nowrap;border:0;}
+.dsl-icon{display:inline-grid;place-items:center;flex:none;width:24px;height:24px;border-radius:7px;box-sizing:border-box;
+  --dsl-hue:#6b7280;color:var(--dsl-hue);
+  background:color-mix(in srgb,var(--dsl-hue) 12%,var(--dsw-alias-bg-base));
+  box-shadow:inset 0 0 0 1px color-mix(in srgb,var(--dsl-hue) 18%,transparent);}
+.dsl-icon svg{width:14px;height:14px;display:block;}
+.dsl-icon[data-category="read"],.dsl-icon[data-category="search"]{--dsl-hue:#2f6bf2;}
+.dsl-icon[data-category="web"]{--dsl-hue:#0e9384;}
+.dsl-icon[data-category="write"]{--dsl-hue:#c97a06;}
+.dsl-icon[data-category="run"]{--dsl-hue:#7a5af0;}
+.dsl-icon[data-category="collab"]{--dsl-hue:#d1437f;}
+.dsl-icon[data-category="answer"],.dsl-icon[data-category="deliver"],.dsl-icon[data-category="finish"]{--dsl-hue:#12a150;}
+.dsl-icon[data-category="reasoning"]{--dsl-hue:#7c8594;}
+.dsl-icon[data-category="note"]{--dsl-hue:#e2711d;}
+.dsl-icon[data-category="error"]{--dsl-hue:var(--dsw-alias-state-error-primary);}
+.dsl-icon[data-category="start"]{--dsl-hue:var(--dsw-alias-label-secondary);}
+
+.dsl-map{margin:14px 0 18px;padding:14px 16px 16px;border:1px solid var(--dsw-alias-border-l1);border-radius:14px;
+  background:var(--dsw-alias-bg-layer-1);color:var(--dsw-alias-label-primary);min-width:0;}
 .dsl-map--compact{margin:0;padding:0;border:0;background:transparent;}
-.dsl-map-head{display:flex;align-items:baseline;gap:6px 10px;flex-wrap:wrap;margin-bottom:8px;}
-.dsl-map-title{margin:0;font-size:14px;font-weight:650;}
-.dsl-map-hint,.dsl-map-empty{font-size:11px;color:var(--dsw-alias-label-secondary);margin:0;}
-.dsl-map-scroll{position:relative;max-height:216px;overflow:auto;padding:7px;scrollbar-gutter:stable;border-radius:12px;
-  scrollbar-width:thin;scrollbar-color:color-mix(in srgb,var(--dsw-alias-label-secondary) 42%,transparent) transparent;
-  background-image:
-    radial-gradient(circle,color-mix(in srgb,var(--dsw-alias-label-primary) 13%,transparent) .7px,transparent 1px),
-    radial-gradient(ellipse at 5% 0%,rgb(96 165 250/.18),transparent 62%),
-    radial-gradient(ellipse at 100% 100%,rgb(192 132 252/.17),transparent 65%);
-  background-size:13px 13px,auto,auto;}
-.dsl-map--compact .dsl-map-scroll{max-height:min(220px,45vh);}
-.dsl-map-grid{display:grid;gap:12px 17px;padding:0;margin:0;list-style:none;}
-.dsl-map-cell{position:relative;min-width:0;display:flex;}
-.dsl-map-box{display:flex;flex-direction:column;justify-content:center;align-items:flex-start;gap:2px;
-  --dsl-map-accent:#64748b;
-  --dsl-map-tint:color-mix(in srgb,var(--dsw-alias-bg-base) 78%,var(--dsl-map-accent));
-  --dsl-map-shadow:inset 0 1px 0 rgb(255 255 255/.34),0 3px 8px color-mix(in srgb,var(--dsw-alias-label-primary) 9%,transparent);
-  width:100%;min-width:0;min-height:46px;box-sizing:border-box;padding:6px 9px;text-align:left;
-  border:1px solid color-mix(in srgb,var(--dsw-alias-border-l2) 70%,var(--dsl-map-accent));
-  border-radius:11px;
-  background:linear-gradient(155deg,rgb(255 255 255/.08),transparent 64%),
-    color-mix(in srgb,var(--dsl-map-tint) 84%,transparent);
-  box-shadow:var(--dsl-map-shadow);
-  font:inherit;font-size:11px;line-height:1.25;color:inherit;}
-.dsl-map-box[data-category="start"]{--dsl-map-accent:#6366f1;}
-.dsl-map-box[data-category="read"]{--dsl-map-accent:#0891b2;}
-.dsl-map-box[data-category="search"]{--dsl-map-accent:#2563eb;}
-.dsl-map-box[data-category="write"]{--dsl-map-accent:#d97706;}
-.dsl-map-box[data-category="run"]{--dsl-map-accent:#9333ea;}
-.dsl-map-box[data-category="web"]{--dsl-map-accent:#0d9488;}
-.dsl-map-box[data-category="collab"]{--dsl-map-accent:#db2777;}
-.dsl-map-box[data-category="deliver"],.dsl-map-box[data-category="finish"]{--dsl-map-accent:#16a34a;}
-.dsl-map-box[data-category="reasoning"]{--dsl-map-accent:#c026d3;}
-.dsl-map-box[data-category="answer"]{--dsl-map-accent:#4d7c0f;}
-.dsl-map-box[data-category="note"]{--dsl-map-accent:#ea580c;}
+.dsl-map-head{display:flex;align-items:baseline;gap:4px 10px;flex-wrap:wrap;margin-bottom:12px;}
+.dsl-map-title{margin:0;font-size:14px;font-weight:650;letter-spacing:.01em;}
+.dsl-map-progress{font-size:11.5px;color:var(--dsw-alias-label-secondary);font-variant-numeric:tabular-nums;}
+.dsl-map-hint,.dsl-map-empty{font-size:11.5px;color:var(--dsw-alias-label-secondary);margin:0;}
+.dsl-map-hint{margin-left:auto;}
+.dsl-map-scroll{position:relative;overflow:auto;scrollbar-width:thin;
+  scrollbar-color:color-mix(in srgb,var(--dsw-alias-label-secondary) 40%,transparent) transparent;}
+.dsl-map-track,.dsl-map-items{list-style:none;margin:0;padding:0;}
+
+/* Shared card */
+.dsl-map-box{position:relative;display:grid;grid-template-columns:24px minmax(0,1fr);column-gap:10px;align-items:center;
+  width:100%;min-width:0;box-sizing:border-box;padding:9px 11px;text-align:left;
+  border:1px solid var(--dsw-alias-border-l1);border-radius:10px;background:var(--dsw-alias-bg-base);
+  font:inherit;font-size:12.5px;line-height:1.4;color:inherit;
+  transition:border-color .15s ease,box-shadow .15s ease,background .15s ease;}
 button.dsl-map-box{cursor:pointer;}
-button.dsl-map-box:hover{--dsl-map-tint:color-mix(in srgb,var(--dsw-alias-bg-base) 72%,var(--dsl-map-accent));}
-.dsl-map-box--live{box-shadow:inset 0 0 0 1px var(--dsw-alias-brand-primary),var(--dsl-map-shadow);
-  border-color:var(--dsw-alias-brand-primary);}
-.dsl-map-box.dsl-map-box--error{--dsl-map-accent:var(--dsw-alias-state-error-primary);border-color:var(--dsl-map-accent);}
-.dsl-map-box:focus-visible{outline:2px solid var(--dsw-alias-brand-primary);outline-offset:1px;}
-.dsl-map-name,.dsl-map-subject{max-width:100%;overflow:hidden;text-overflow:ellipsis;}
-.dsl-map-name{display:-webkit-box;-webkit-box-orient:vertical;-webkit-line-clamp:2;font-weight:650;overflow-wrap:anywhere;}
-.dsl-map-subject{white-space:nowrap;}
-.dsl-map-no,.dsl-map-subject{font-size:10px;color:var(--dsw-alias-label-secondary);}
-.dsl-map-no::before{content:"";display:inline-block;width:5px;height:5px;margin-inline-end:4px;
-  vertical-align:2px;border-radius:50%;background:var(--dsl-map-accent);}
-.dsl-map-purpose{display:-webkit-box;overflow:hidden;-webkit-box-orient:vertical;-webkit-line-clamp:2;
-  color:var(--dsw-alias-label-secondary);font-size:10.5px;overflow-wrap:anywhere;margin-top:2px;}
-.dsl-map-purpose-label{font-weight:600;}
-.dsl-map-box--live .dsl-map-no{color:var(--dsw-alias-brand-primary);}
-.dsl-map-box--error .dsl-map-no{color:var(--dsw-alias-state-error-primary);}
-.dsl-map-arrow{pointer-events:none;position:absolute;display:grid;place-items:center;font-size:12px;
-  color:var(--dsw-alias-label-secondary);line-height:1;}
-.dsl-map-arrow--right{top:0;bottom:0;right:-17px;width:17px;}
-.dsl-map-arrow--left{top:0;bottom:0;left:-17px;width:17px;}
-.dsl-map-arrow--down{left:0;right:0;bottom:-12px;height:12px;}
+button.dsl-map-box:hover{border-color:var(--dsw-alias-border-l2);
+  box-shadow:0 2px 10px color-mix(in srgb,var(--dsw-alias-label-primary) 7%,transparent);}
+.dsl-map-box:focus-visible{outline:2px solid var(--dsw-alias-brand-primary);outline-offset:2px;}
+.dsl-map-box > .dsl-icon{align-self:start;margin-top:1px;}
+.dsl-map-box--terminal > .dsl-icon{align-self:center;margin-top:0;}
+.dsl-map-text{min-width:0;display:flex;flex-direction:column;gap:1px;}
+.dsl-map-line{display:flex;align-items:baseline;gap:6px;min-width:0;}
+.dsl-map-name{font-weight:600;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;flex:none;max-width:100%;}
+.dsl-map-subject{min-width:0;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;
+  font-family:ui-monospace,SFMono-Regular,Menlo,Consolas,monospace;font-size:11px;color:var(--dsw-alias-label-secondary);}
+.dsl-map-purpose{display:-webkit-box;-webkit-box-orient:vertical;-webkit-line-clamp:2;overflow:hidden;
+  font-size:11.5px;color:var(--dsw-alias-label-secondary);overflow-wrap:anywhere;}
+.dsl-map-status{align-self:flex-start;display:inline-flex;align-items:center;gap:5px;margin-top:4px;padding:1px 7px;border-radius:999px;
+  font-size:10.5px;font-weight:600;color:var(--dsw-alias-brand-primary);
+  background:color-mix(in srgb,var(--dsw-alias-brand-primary) 10%,transparent);}
+.dsl-map-status::before{content:"";width:6px;height:6px;border-radius:50%;background:currentColor;}
+.dsl-map-box--live .dsl-map-status::before{animation:dslPulse 1.4s ease-in-out infinite;}
+.dsl-map-box--error .dsl-map-status{color:var(--dsw-alias-state-error-primary);
+  background:color-mix(in srgb,var(--dsw-alias-state-error-primary) 10%,transparent);}
+.dsl-map-box--live{border-color:var(--dsw-alias-brand-primary);
+  background:color-mix(in srgb,var(--dsw-alias-brand-primary) 5%,var(--dsw-alias-bg-base));
+  box-shadow:0 0 0 3px color-mix(in srgb,var(--dsw-alias-brand-primary) 16%,transparent);}
+.dsl-map-box--error{border-color:color-mix(in srgb,var(--dsw-alias-state-error-primary) 60%,var(--dsw-alias-border-l1));}
+.dsl-map-box--terminal{display:inline-grid;grid-template-columns:22px auto;column-gap:8px;align-items:center;width:auto;padding:5px 12px 5px 6px;
+  border-radius:999px;background:var(--dsw-alias-bg-base);}
+.dsl-map-box--terminal .dsl-icon{width:22px;height:22px;border-radius:50%;}
+.dsl-map-box--terminal .dsl-map-name{font-weight:600;font-size:12px;}
+@keyframes dslPulse{0%,100%{opacity:1;transform:scale(1);}50%{opacity:.35;transform:scale(.78);}}
+
+/* Full view: one column per step, read left to right */
+.dsl-map-scroll{padding:5px 6px 8px 4px;}
+.dsl-map-track{display:flex;align-items:flex-start;gap:0;width:max-content;min-width:100%;box-sizing:border-box;padding-right:8px;}
+.dsl-map-group{position:relative;display:flex;flex-direction:column;gap:6px;flex:none;width:200px;}
+.dsl-map-group--terminal{width:auto;padding-top:22px;}
+.dsl-map-group-label{height:16px;font-size:11px;font-weight:600;color:var(--dsw-alias-label-secondary);
+  font-variant-numeric:tabular-nums;letter-spacing:.02em;}
+.dsl-map-items{display:flex;flex-direction:column;gap:8px;}
+.dsl-map-link{flex:none;align-self:flex-start;position:relative;width:34px;height:2px;margin-top:44px;
+  background:var(--dsw-alias-border-l2);}
+.dsl-map-link::after{content:"";position:absolute;right:0;top:-3px;width:6px;height:6px;
+  border-top:2px solid var(--dsw-alias-border-l2);border-right:2px solid var(--dsw-alias-border-l2);
+  transform:rotate(45deg);box-sizing:border-box;}
+.dsl-map-link--pending{background:repeating-linear-gradient(90deg,var(--dsw-alias-border-l2) 0 4px,transparent 4px 8px);}
+
+/* Compact popover: a vertical rail */
+.dsl-map--compact .dsl-map-head{margin-bottom:10px;}
+.dsl-map--compact .dsl-map-hint{display:none;}
+.dsl-map--compact .dsl-map-scroll{max-height:min(380px,52vh);padding:2px 4px 4px 2px;}
+.dsl-map--compact .dsl-map-track{display:block;width:auto;min-width:0;position:relative;}
+.dsl-map--compact .dsl-map-track::before{content:"";position:absolute;left:23px;top:16px;bottom:16px;width:2px;
+  border-radius:1px;background:var(--dsw-alias-border-l1);}
+.dsl-map--compact .dsl-map-group{width:auto;gap:6px;padding:0 0 10px 0;}
+.dsl-map--compact .dsl-map-group--terminal{padding:0 0 10px 6px;}
+.dsl-map--compact .dsl-map-group:last-child{padding-bottom:0;}
+.dsl-map--compact .dsl-map-group-label{height:auto;padding-left:46px;}
+.dsl-map--compact .dsl-map-items{gap:6px;}
+.dsl-map--compact .dsl-map-box:not(.dsl-map-box--terminal){position:relative;}
+.dsl-map--compact .dsl-map-link{display:none;}
+.dsl-map--compact .dsl-map-box--terminal{background:var(--dsw-alias-bg-base);}
+
 .dsl-zoom-backdrop{position:fixed;inset:0;z-index:1200;display:flex;align-items:center;justify-content:center;
   padding:24px;background:color-mix(in srgb,var(--dsw-alias-bg-base) 68%,transparent);backdrop-filter:blur(3px);}
 .dsl-zoom{box-sizing:border-box;width:min(980px,94vw);max-height:88vh;display:flex;flex-direction:column;
@@ -2680,7 +2720,9 @@ button.dsl-map-box:hover{--dsl-map-tint:color-mix(in srgb,var(--dsw-alias-bg-bas
   border:1px solid var(--dsw-alias-border-l2);background:var(--dsw-alias-bg-layer-1);}
 .dsl-zoom-node--live{border-color:var(--dsw-alias-brand-primary);}
 .dsl-zoom-node--error{border-color:var(--dsw-alias-state-error-primary);}
-.dsl-zoom-node-icon{font-size:22px;line-height:1.1;flex:none;}
+.dsl-zoom-node-icon{flex:none;}
+.dsl-zoom-node-icon .dsl-icon{width:34px;height:34px;border-radius:10px;}
+.dsl-zoom-node-icon .dsl-icon svg{width:19px;height:19px;}
 .dsl-zoom-node-main{flex:1;min-width:0;}
 .dsl-zoom-node-title{font-size:16px;font-weight:650;overflow-wrap:anywhere;}
 .dsl-zoom-node-subject{font-family:ui-monospace,SFMono-Regular,Menlo,Consolas,monospace;font-size:12.5px;
@@ -2757,31 +2799,149 @@ function flowNodes(turn, t, lang, actionContext) {
   return { nodes, activeKey };
 }
 
+const ICON_PATHS = {
+  start: 'M6 4v16M6 4.5h10.5l-2.2 3.6 2.2 3.6H6',
+  read: 'M7 3.5h7l4 4V20.5H7zM14 3.5v4h4M9.5 12h6M9.5 15.5h6',
+  search: 'M10.5 4.5a6 6 0 1 1 0 12a6 6 0 0 1 0-12zM15 15l4.5 4.5',
+  write: 'M4.5 19.5h4l10-10-4-4-10 10zM13 7l4 4',
+  run: 'M3.5 5h17v14h-17zM7.5 9.5l3 2.5-3 2.5M12.5 14.8h4',
+  web: 'M12 3.5a8.5 8.5 0 1 1 0 17a8.5 8.5 0 0 1 0-17zM3.5 12h17M12 3.5c2.3 2.4 3.5 5.2 3.5 8.5s-1.2 6.1-3.5 8.5c-2.3-2.4-3.5-5.2-3.5-8.5s1.2-6.1 3.5-8.5z',
+  collab: 'M9 11a3.3 3.3 0 1 0 0-6.6a3.3 3.3 0 0 0 0 6.6zM3 19.5c.6-3.3 3-5.5 6-5.5s5.4 2.2 6 5.5M16 4.6a3.2 3.2 0 0 1 0 6.2M18 14.2c1.8.8 3 2.6 3.3 5.3',
+  deliver: 'M12 3.5l7.5 4.2v8.6L12 20.5l-7.5-4.2V7.7zM4.5 7.7l7.5 4.2 7.5-4.2M12 11.9v8.6',
+  reasoning: 'M12 4l1.8 4.7L18.5 10.5l-4.7 1.8L12 17l-1.8-4.7L5.5 10.5l4.7-1.8zM18 15.5l.7 1.8 1.8.7-1.8.7-.7 1.8-.7-1.8-1.8-.7 1.8-.7z',
+  answer: 'M4.5 5h15v10.5H9.5l-5 4zM8.5 9.2h7M8.5 12h4.5',
+  note: 'M12 4l8.5 15h-17zM12 10v4M12 16.8v.2',
+  finish: 'M12 3.5a8.5 8.5 0 1 1 0 17a8.5 8.5 0 0 1 0-17zM8.2 12.2l2.6 2.6 5-5.3',
+  other: 'M12 8.8a3.2 3.2 0 1 1 0 6.4a3.2 3.2 0 0 1 0-6.4zM12 3.5v2.6M12 17.9v2.6M3.5 12h2.6M17.9 12h2.6M6 6l1.8 1.8M16.2 16.2L18 18M6 18l1.8-1.8M16.2 7.8L18 6',
+};
+
+/** Small tinted line icon; colour comes from the category, nothing else. */
+function CategoryIcon({ category, error = false }) {
+  const key = error ? 'note' : Object.hasOwn(ICON_PATHS, category) ? category : 'other';
+  return h(
+    'span',
+    { className: 'dsl-icon', 'data-category': error ? 'error' : category, 'aria-hidden': true },
+    h('svg', { viewBox: '0 0 24 24', fill: 'none', stroke: 'currentColor', strokeWidth: 1.7, strokeLinecap: 'round', strokeLinejoin: 'round' },
+      h('path', { d: ICON_PATHS[key] })),
+  );
+}
+
+
+/** Icon category for one recorded event in the detailed list. */
+function eventCategory(item) {
+  if (item.kind === 'tool') return item.category || 'other';
+  if (item.kind === 'think') return 'reasoning';
+  if (item.kind === 'message') return 'answer';
+  return 'note';
+}
+
+/** The plugin mark: a lens over three connected flow nodes. */
+function LensMark() {
+  const id = 'dsl-lens-' + React.useId().replace(/[^\w-]/g, '');
+  return h(
+    'svg',
+    { viewBox: '0 0 40 40', fill: 'none' },
+    h('defs', null, h('linearGradient', { id, x1: 0, y1: 0, x2: 1, y2: 1 },
+      h('stop', { offset: 0, stopColor: '#4d6bfe' }), h('stop', { offset: 1, stopColor: '#7a5af0' }))),
+    h('rect', { x: 1, y: 1, width: 38, height: 38, rx: 11, fill: 'url(#' + id + ')' }),
+    h('path', { d: 'M12.5 14.5h4.5M16.5 14.5l3.5 5.5M20 20h-4.5', stroke: '#fff', strokeOpacity: 0.55, strokeWidth: 1.6, strokeLinecap: 'round' }),
+    h('circle', { cx: 12, cy: 14.5, r: 2.3, fill: '#fff' }),
+    h('circle', { cx: 20.5, cy: 14.5, r: 2.3, fill: '#fff', fillOpacity: 0.85 }),
+    h('circle', { cx: 14, cy: 21, r: 2.3, fill: '#fff', fillOpacity: 0.7 }),
+    h('circle', { cx: 18, cy: 18, r: 9.5, stroke: '#fff', strokeWidth: 2.4 }),
+    h('path', { d: 'M25 25l6 6', stroke: '#fff', strokeWidth: 2.8, strokeLinecap: 'round' }),
+  );
+}
+
+/** Group consecutive nodes that belong to the same step. */
+function groupFlowNodes(nodes) {
+  const groups = [];
+  for (const node of nodes) {
+    const last = groups.at(-1);
+    if (node.step != null && last && last.step === node.step) last.nodes.push(node);
+    else groups.push({ key: 'g-' + node.key, step: node.step, nodes: [node] });
+  }
+  return groups;
+}
+
 function FlowOverview({ turn, t, lang, compact = false, visible = true, actionContext, onStep }) {
   const viewport = React.useRef(null);
   const activeCell = React.useRef(null);
-  const [columns, setColumns] = React.useState(compact ? 3 : 6);
   const { nodes: graph, activeKey } = flowNodes(turn, t, lang, actionContext);
-  React.useEffect(() => {
-    const element = viewport.current;
-    if (!element || typeof ResizeObserver !== 'function') return undefined;
-    const observer = new ResizeObserver(([entry]) => {
-      const width = entry.contentRect.width;
-      setColumns(Math.max(1, Math.min(compact ? 3 : 7, Math.floor((width + 17) / (compact ? 120 : 135)))));
-    });
-    observer.observe(element);
-    return () => observer.disconnect();
-  }, [compact]);
+  const groups = groupFlowNodes(graph);
+  const actions = graph.filter((node) => node.actionKey).length;
   React.useEffect(() => {
     const element = viewport.current;
     const cell = activeCell.current;
-    if (!visible || !element || !cell) return;
-    const top = cell.offsetTop;
-    const bottom = top + cell.offsetHeight;
-    if (top < element.scrollTop) element.scrollTop = top;
-    else if (bottom > element.scrollTop + element.clientHeight) element.scrollTop = bottom - element.clientHeight;
-  }, [visible, activeKey, columns]);
-  const arrows = { right: '→', left: '←', down: '↓' };
+    if (!visible || !element || !cell || typeof cell.getBoundingClientRect !== 'function') return;
+    const outer = element.getBoundingClientRect();
+    const inner = cell.getBoundingClientRect();
+    if (inner.top < outer.top) element.scrollTop += inner.top - outer.top - 8;
+    else if (inner.bottom > outer.bottom) element.scrollTop += inner.bottom - outer.bottom + 8;
+    if (inner.left < outer.left) element.scrollLeft += inner.left - outer.left - 16;
+    else if (inner.right > outer.right) element.scrollLeft += inner.right - outer.right + 16;
+  }, [visible, activeKey]);
+  const progress = [t('metaSteps', { n: turn.stepCount }), t('metaTools', { n: actions })].join(' · ');
+
+  const renderBox = (node) => {
+    const stepNumber = node.step == null ? '' : t('stepNumber', { k: node.step });
+    const badge = [stepNumber, node.status].filter(Boolean).join(' · ');
+    const actionable = onStep && node.step != null;
+    const current = node.key === activeKey;
+    const terminal = node.category === 'start' || node.category === 'finish';
+    const purposePreview = lang === 'zh'
+      ? clip(node.purpose?.replace(/^(?:让我(?:也|先)?|我(?:们)?(?:也|先)?(?:需要|应该))\s*/, ''), 60)
+      : clip(node.purpose, 110);
+    const classes = ['dsl-map-box'];
+    if (node.tone) classes.push('dsl-map-box--' + node.tone);
+    if (terminal) classes.push('dsl-map-box--terminal');
+    return h(
+      'li',
+      { className: 'dsl-map-cell', key: node.key, ref: current ? activeCell : undefined },
+      h(
+        actionable ? 'button' : 'div',
+        {
+          className: classes.join(' '),
+          'data-category': node.category,
+          'aria-current': current ? 'step' : undefined,
+          title: [badge, node.title, node.subject, node.purpose ? node.purposeLabel + ' · ' + node.purpose : ''].filter(Boolean).join(' · '),
+          ...(actionable ? { type: 'button', onClick: () => onStep(node.step, node.actionKey) } : {}),
+        },
+        h(CategoryIcon, { category: node.category, error: node.tone === 'error' && !terminal }),
+        h(
+          'span',
+          { className: 'dsl-map-text' },
+          badge ? h('span', { className: 'dsl-map-no dsl-sr' }, badge) : null,
+          h(
+            'span',
+            { className: 'dsl-map-line' },
+            h('span', { className: 'dsl-map-name' }, node.title),
+            node.subject ? h('span', { className: 'dsl-map-subject' }, node.subject) : null,
+          ),
+          node.purpose
+            ? h('span', { className: 'dsl-map-purpose' }, h('span', { className: 'dsl-sr' }, node.purposeLabel + ' · '), purposePreview)
+            : null,
+          node.status ? h('span', { className: 'dsl-map-status', 'aria-hidden': true }, node.status) : null,
+        ),
+      ),
+    );
+  };
+
+  const track = [];
+  groups.forEach((group, index) => {
+    const terminal = group.step == null;
+    if (index > 0) {
+      const pending = !!turn.live && index === groups.length - 1;
+      track.push(h('li', { key: 'link-' + group.key, className: 'dsl-map-link' + (pending ? ' dsl-map-link--pending' : ''), 'aria-hidden': true }));
+    }
+    track.push(h(
+      'li',
+      { key: group.key, className: 'dsl-map-group' + (terminal ? ' dsl-map-group--terminal' : '') },
+      terminal ? null : h('div', { className: 'dsl-map-group-label', 'aria-hidden': true }, t('stepNumber', { k: group.step })),
+      h('ol', { className: 'dsl-map-items', role: 'list' }, group.nodes.map(renderBox)),
+    ));
+  });
+
   return h(
     'section',
     { className: 'dsl-map' + (compact ? ' dsl-map--compact' : ''), 'aria-label': t('overviewTitle') },
@@ -2789,52 +2949,10 @@ function FlowOverview({ turn, t, lang, compact = false, visible = true, actionCo
       'div',
       { className: 'dsl-map-head' },
       h(compact ? 'strong' : 'h3', { className: 'dsl-map-title' }, t('overviewTitle')),
+      turn.steps.length ? h('span', { className: 'dsl-map-progress' }, progress) : null,
       onStep ? h('p', { className: 'dsl-map-hint' }, t('overviewHint')) : null,
     ),
-    h(
-      'div',
-      { className: 'dsl-map-scroll', ref: viewport },
-      h(
-        'ol',
-        { className: 'dsl-map-grid', role: 'list', style: { gridTemplateColumns: 'repeat(' + columns + ', minmax(0, 1fr))' } },
-        graph.map((node, index) => {
-          const row = Math.floor(index / columns);
-          const offset = index % columns;
-          const forward = row % 2 === 0;
-          const column = forward ? offset + 1 : columns - offset;
-          const direction = offset === columns - 1 ? 'down' : forward ? 'right' : 'left';
-          const stepNumber = node.step == null ? '' : t('stepNumber', { k: node.step });
-          const badge = [stepNumber, node.status].filter(Boolean).join(' · ');
-          const actionable = onStep && node.step != null;
-          const current = node.key === activeKey;
-          const purpose = node.purpose ? node.purposeLabel + ' · ' + node.purpose : '';
-          const purposePreview = lang === 'zh'
-            ? clip(node.purpose?.replace(/^(?:让我(?:也|先)?|我(?:们)?(?:也|先)?(?:需要|应该))\s*/, ''), 52)
-            : clip(node.purpose, 100);
-          return h(
-            'li',
-            { className: 'dsl-map-cell', key: node.key, ref: current ? activeCell : undefined, style: { gridRow: row + 1, gridColumn: column } },
-            h(
-              actionable ? 'button' : 'div',
-              {
-                className: 'dsl-map-box' + (node.tone ? ' dsl-map-box--' + node.tone : ''),
-                'data-category': node.category,
-                'aria-current': current ? 'step' : undefined,
-                title: [badge, node.title, node.subject, purpose].filter(Boolean).join(' · '),
-                ...(actionable ? { type: 'button', onClick: () => onStep(node.step, node.actionKey) } : {}),
-              },
-              badge ? h('span', { className: 'dsl-map-no' }, badge) : null,
-              h('span', { className: 'dsl-map-name' }, node.title),
-              node.subject ? h('span', { className: 'dsl-map-subject' }, node.subject) : null,
-              node.purpose ? h('span', { className: 'dsl-map-purpose' }, h('span', { className: 'dsl-map-purpose-label' }, node.purposeLabel + ' · '), purposePreview) : null,
-            ),
-            index < graph.length - 1
-              ? h('span', { className: 'dsl-map-arrow dsl-map-arrow--' + direction, 'aria-hidden': true }, arrows[direction])
-              : null,
-          );
-        }),
-      ),
-    ),
+    h('div', { className: 'dsl-map-scroll', ref: viewport }, h('ol', { className: 'dsl-map-track', role: 'list' }, track)),
     !turn.steps.length && turn.live ? h('p', { className: 'dsl-map-empty' }, t('overviewEmpty')) : null,
   );
 }
@@ -3050,7 +3168,7 @@ function EventNode({ item, t, lang, actionContext, registerAction, expanded = fa
     h(
       'div',
       { className: 'dsl-event-main' },
-      h('span', { className: 'dsl-event-icon', 'aria-hidden': true }, item.icon),
+      h('span', { className: 'dsl-event-icon', 'aria-hidden': true }, h(CategoryIcon, { category: eventCategory(item), error: tone === 'error' })),
       h('span', { className: 'dsl-event-title' }, title),
       action?.subject ? h('span', { className: 'dsl-event-subject' }, action.subject) : null,
       statusText
@@ -3172,7 +3290,7 @@ function ZoomContent(props) {
     h(
       'div',
       { className: 'dsl-zoom-node' + (tone ? ' dsl-zoom-node--' + tone : '') },
-      h('span', { className: 'dsl-zoom-node-icon', 'aria-hidden': true }, item ? item.icon : '🧭'),
+      h('span', { className: 'dsl-zoom-node-icon', 'aria-hidden': true }, h(CategoryIcon, { category: item ? eventCategory(item) : 'reasoning', error: tone === 'error' })),
       h(
         'div',
         { className: 'dsl-zoom-node-main' },
@@ -3453,7 +3571,7 @@ function EmptyState(props) {
   return h(
     'div',
     { className: 'dsl-empty' },
-    h('span', { className: 'dsl-empty-icon' }, '🔎'),
+    h('span', { className: 'dsl-empty-icon', 'aria-hidden': true }, h(LensMark)),
     h('p', { className: 'dsl-empty-title' }, props.t('emptyTitle')),
     h('p', { className: 'dsl-empty-body' }, props.t('emptyBody')),
   );
@@ -3513,7 +3631,7 @@ function StepLensView(props) {
     h(
       'div',
       { className: 'dsl-header' },
-      h('span', { className: 'dsl-logo' }, '🔎'),
+      h('span', { className: 'dsl-logo', 'aria-hidden': true }, h(LensMark)),
       h(
         'div',
         { className: 'dsl-heading' },
