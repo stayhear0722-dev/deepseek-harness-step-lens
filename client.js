@@ -2159,6 +2159,25 @@ const STRINGS = {
     overviewFailed: 'Turn failed',
     overviewReason: 'Reasoning',
     overviewPurpose: 'Description',
+    keyPurpose: 'Goal',
+    keyReason: 'Why',
+    keyAction: 'How',
+    keyResult: 'Result',
+    readLines: 'read {n} lines',
+    foundN: '{n} matches',
+    foundNone: 'no matches',
+    savedOk: 'saved',
+    ranOk: 'ran successfully',
+    fetchedN: 'got {n} characters',
+    learnWhy: 'Why the AI did this',
+    learnHow: 'What it actually did',
+    learnGot: 'What came back',
+    learnTip: 'Worth learning',
+    learnTool: 'About this tool',
+    learnNoReason: 'No reasoning was recorded right before this action.',
+    learnOriginal: 'Originals and arguments',
+    learnTranslated: 'translated locally',
+    finishDetails: 'How this turn ended',
     stepDetails: 'Step details',
     actionReasoning: 'Related reasoning summary',
     translationUnavailable: 'Local reasoning translation is temporarily unavailable. The originals are available in each action’s details.',
@@ -2252,6 +2271,25 @@ const STRINGS = {
     overviewFailed: '本轮失败',
     overviewReason: '相关思考',
     overviewPurpose: '说明',
+    keyPurpose: '目的',
+    keyReason: '思路',
+    keyAction: '做法',
+    keyResult: '结果',
+    readLines: '读到 {n} 行',
+    foundN: '找到 {n} 条',
+    foundNone: '没有找到匹配',
+    savedOk: '已写入',
+    ranOk: '执行成功',
+    fetchedN: '取回 {n} 字',
+    learnWhy: 'AI 为什么这样做',
+    learnHow: '具体做了什么',
+    learnGot: '得到了什么',
+    learnTip: '值得学的做法',
+    learnTool: '这个工具是做什么的',
+    learnNoReason: '这一步之前没有记录到相关思考。',
+    learnOriginal: '原文与参数',
+    learnTranslated: '本机翻译',
+    finishDetails: '本轮如何收尾',
     stepDetails: '具体步骤',
     actionReasoning: '相关思考摘要',
     translationUnavailable: '本地思考翻译暂不可用。原文可在动作详情中查看。',
@@ -2338,7 +2376,8 @@ const STRINGS = {
 const STYLE = `
 .dsl-root{container-type:inline-size;display:flex;flex-direction:column;height:100%;min-height:0;background:var(--dsw-alias-bg-base);color:var(--dsw-alias-label-primary);font-size:14px;line-height:1.62;}
 .dsl-header{flex:none;display:flex;align-items:center;gap:12px;padding:12px 20px 10px;border-bottom:1px solid var(--dsw-alias-border-l1);}
-.dsl-logo{width:34px;height:34px;border-radius:10px;display:flex;align-items:center;justify-content:center;font-size:18px;background:var(--dsw-alias-bg-layer-2);border:1px solid var(--dsw-alias-border-l1);flex:none;}
+.dsl-logo{width:34px;height:34px;flex:none;display:block;}
+.dsl-logo svg{width:100%;height:100%;display:block;}
 .dsl-heading{flex:1;min-width:0;}
 .dsl-h2{margin:0;font-size:15px;font-weight:600;}
 .dsl-sub{margin:1px 0 0;font-size:12px;color:var(--dsw-alias-label-secondary);}
@@ -2420,7 +2459,9 @@ const STYLE = `
 .dsl-flow-request{margin:2px 0 0;color:var(--dsw-alias-label-secondary);font-size:12px;overflow-wrap:anywhere;}
 .dsl-event{border-top:1px solid var(--dsw-alias-border-l1);padding:6px 10px;min-width:0;}
 .dsl-event-main{display:flex;align-items:baseline;gap:5px 8px;flex-wrap:wrap;}
-.dsl-event-icon{width:16px;flex:none;text-align:center;font-size:12px;}
+.dsl-event-icon{flex:none;align-self:center;}
+.dsl-event-icon .dsl-icon{width:20px;height:20px;border-radius:6px;}
+.dsl-event-icon .dsl-icon svg{width:12px;height:12px;}
 .dsl-event-title{font-size:13px;font-weight:600;overflow-wrap:anywhere;}
 .dsl-event-subject{color:var(--dsw-alias-label-secondary);font-size:12px;overflow-wrap:anywhere;min-width:0;}
 .dsl-event-status{margin-left:auto;color:var(--dsw-alias-label-secondary);font-size:11px;white-space:nowrap;}
@@ -2456,7 +2497,8 @@ const STYLE = `
   .dsl-event-detail{margin-left:0;}
 }
 .dsl-empty{max-width:540px;margin:56px auto 0;text-align:center;color:var(--dsw-alias-label-secondary);}
-.dsl-empty-icon{font-size:34px;display:block;margin-bottom:10px;}
+.dsl-empty-icon{display:block;width:44px;height:44px;margin:0 auto 12px;}
+.dsl-empty-icon svg{width:100%;height:100%;display:block;}
 .dsl-empty-title{font-size:15px;font-weight:600;color:var(--dsw-alias-label-primary);margin:0 0 6px;}
 .dsl-empty-body{font-size:13px;line-height:1.75;margin:0;}
 .dsl-empty-steps{padding:14px;border:1px dashed var(--dsw-alias-border-l2);border-radius:9px;text-align:center;font-size:12px;color:var(--dsw-alias-label-secondary);}
@@ -2603,70 +2645,136 @@ function Chip(props) {
 }
 
 const FLOW_OVERVIEW_STYLE = `
-.dsl-map{margin:13px 0 15px;padding:10px 12px 12px;border:1px solid var(--dsw-alias-border-l1);
-  border-radius:12px;background:var(--dsw-alias-bg-layer-1);color:var(--dsw-alias-label-primary);min-width:0;}
+.dsl-sr{position:absolute;width:1px;height:1px;padding:0;margin:-1px;overflow:hidden;clip:rect(0 0 0 0);white-space:nowrap;border:0;}
+.dsl-icon{display:inline-grid;place-items:center;flex:none;width:24px;height:24px;border-radius:7px;box-sizing:border-box;
+  --dsl-hue:#6b7280;color:var(--dsl-hue);
+  background:color-mix(in srgb,var(--dsl-hue) 12%,var(--dsw-alias-bg-base));
+  box-shadow:inset 0 0 0 1px color-mix(in srgb,var(--dsl-hue) 18%,transparent);}
+.dsl-icon svg{width:14px;height:14px;display:block;}
+:is(.dsl-icon,.dsl-map-box)[data-category="read"],:is(.dsl-icon,.dsl-map-box)[data-category="search"]{--dsl-hue:#2f6bf2;}
+:is(.dsl-icon,.dsl-map-box)[data-category="web"]{--dsl-hue:#0e9384;}
+:is(.dsl-icon,.dsl-map-box)[data-category="write"]{--dsl-hue:#c97a06;}
+:is(.dsl-icon,.dsl-map-box)[data-category="run"]{--dsl-hue:#7a5af0;}
+:is(.dsl-icon,.dsl-map-box)[data-category="collab"]{--dsl-hue:#d1437f;}
+:is(.dsl-icon,.dsl-map-box)[data-category="answer"],:is(.dsl-icon,.dsl-map-box)[data-category="deliver"],:is(.dsl-icon,.dsl-map-box)[data-category="finish"]{--dsl-hue:#12a150;}
+:is(.dsl-icon,.dsl-map-box)[data-category="reasoning"]{--dsl-hue:#7c8594;}
+:is(.dsl-icon,.dsl-map-box)[data-category="note"]{--dsl-hue:#e2711d;}
+:is(.dsl-icon,.dsl-map-box)[data-category="error"]{--dsl-hue:var(--dsw-alias-state-error-primary);}
+:is(.dsl-icon,.dsl-map-box)[data-category="start"]{--dsl-hue:var(--dsw-alias-label-secondary);}
+
+.dsl-map{--dsl-light:radial-gradient(ellipse 60% 80% at 0% 0%,color-mix(in srgb,#4d6bfe 16%,transparent),transparent 70%),
+    radial-gradient(ellipse 55% 75% at 100% 100%,color-mix(in srgb,#a855f7 14%,transparent),transparent 70%),
+    radial-gradient(ellipse 40% 60% at 60% 20%,color-mix(in srgb,#14b8a6 9%,transparent),transparent 70%);
+  --dsl-glass:color-mix(in srgb,var(--dsw-alias-bg-base) 58%,transparent);
+  --dsl-glass-edge:color-mix(in srgb,var(--dsw-alias-label-primary) 9%,transparent);
+  --dsl-glass-shine:color-mix(in srgb,color-mix(in srgb,var(--dsw-alias-bg-base) 30%,#fff) 45%,transparent);
+  margin:14px 0 18px;padding:14px 16px 16px;border:1px solid var(--dsw-alias-border-l1);border-radius:16px;
+  background:var(--dsl-light),var(--dsw-alias-bg-layer-1);color:var(--dsw-alias-label-primary);min-width:0;}
 .dsl-map--compact{margin:0;padding:0;border:0;background:transparent;}
-.dsl-map-head{display:flex;align-items:baseline;gap:6px 10px;flex-wrap:wrap;margin-bottom:8px;}
-.dsl-map-title{margin:0;font-size:14px;font-weight:650;}
-.dsl-map-hint,.dsl-map-empty{font-size:11px;color:var(--dsw-alias-label-secondary);margin:0;}
-.dsl-map-scroll{position:relative;max-height:216px;overflow:auto;padding:7px;scrollbar-gutter:stable;border-radius:12px;
-  scrollbar-width:thin;scrollbar-color:color-mix(in srgb,var(--dsw-alias-label-secondary) 42%,transparent) transparent;
-  background-image:
-    radial-gradient(circle,color-mix(in srgb,var(--dsw-alias-label-primary) 13%,transparent) .7px,transparent 1px),
-    radial-gradient(ellipse at 5% 0%,rgb(96 165 250/.18),transparent 62%),
-    radial-gradient(ellipse at 100% 100%,rgb(192 132 252/.17),transparent 65%);
-  background-size:13px 13px,auto,auto;}
-.dsl-map--compact .dsl-map-scroll{max-height:min(220px,45vh);}
-.dsl-map-grid{display:grid;gap:12px 17px;padding:0;margin:0;list-style:none;}
-.dsl-map-cell{position:relative;min-width:0;display:flex;}
-.dsl-map-box{display:flex;flex-direction:column;justify-content:center;align-items:flex-start;gap:2px;
-  --dsl-map-accent:#64748b;
-  --dsl-map-tint:color-mix(in srgb,var(--dsw-alias-bg-base) 78%,var(--dsl-map-accent));
-  --dsl-map-shadow:inset 0 1px 0 rgb(255 255 255/.34),0 3px 8px color-mix(in srgb,var(--dsw-alias-label-primary) 9%,transparent);
-  width:100%;min-width:0;min-height:46px;box-sizing:border-box;padding:6px 9px;text-align:left;
-  border:1px solid color-mix(in srgb,var(--dsw-alias-border-l2) 70%,var(--dsl-map-accent));
-  border-radius:11px;
-  background:linear-gradient(155deg,rgb(255 255 255/.08),transparent 64%),
-    color-mix(in srgb,var(--dsl-map-tint) 84%,transparent);
-  box-shadow:var(--dsl-map-shadow);
-  font:inherit;font-size:11px;line-height:1.25;color:inherit;}
-.dsl-map-box[data-category="start"]{--dsl-map-accent:#6366f1;}
-.dsl-map-box[data-category="read"]{--dsl-map-accent:#0891b2;}
-.dsl-map-box[data-category="search"]{--dsl-map-accent:#2563eb;}
-.dsl-map-box[data-category="write"]{--dsl-map-accent:#d97706;}
-.dsl-map-box[data-category="run"]{--dsl-map-accent:#9333ea;}
-.dsl-map-box[data-category="web"]{--dsl-map-accent:#0d9488;}
-.dsl-map-box[data-category="collab"]{--dsl-map-accent:#db2777;}
-.dsl-map-box[data-category="deliver"],.dsl-map-box[data-category="finish"]{--dsl-map-accent:#16a34a;}
-.dsl-map-box[data-category="reasoning"]{--dsl-map-accent:#c026d3;}
-.dsl-map-box[data-category="answer"]{--dsl-map-accent:#4d7c0f;}
-.dsl-map-box[data-category="note"]{--dsl-map-accent:#ea580c;}
+.dsl-map--compact .dsl-map-scroll{background:var(--dsl-light);border-radius:12px;}
+.dsl-map-head{display:flex;align-items:baseline;gap:4px 10px;flex-wrap:wrap;margin-bottom:12px;}
+.dsl-map-title{margin:0;font-size:14px;font-weight:650;letter-spacing:.01em;}
+.dsl-map-progress{font-size:11.5px;color:var(--dsw-alias-label-secondary);font-variant-numeric:tabular-nums;}
+.dsl-map-hint,.dsl-map-empty{font-size:11.5px;color:var(--dsw-alias-label-secondary);margin:0;}
+.dsl-map-hint{margin-left:auto;}
+.dsl-map-scroll{position:relative;overflow:auto;scrollbar-width:thin;
+  scrollbar-color:color-mix(in srgb,var(--dsw-alias-label-secondary) 40%,transparent) transparent;}
+.dsl-map-track,.dsl-map-items{list-style:none;margin:0;padding:0;}
+
+/* Shared card */
+.dsl-map-box{position:relative;display:grid;grid-template-columns:24px minmax(0,1fr);column-gap:10px;align-items:center;
+  width:100%;min-width:0;box-sizing:border-box;padding:9px 11px;text-align:left;
+  --dsl-hue:#94a3b8;
+  border:1px solid var(--dsl-glass-edge);border-radius:12px;
+  background:linear-gradient(140deg,color-mix(in srgb,var(--dsl-hue) 10%,transparent),transparent 55%),var(--dsl-glass);
+  -webkit-backdrop-filter:blur(16px) saturate(170%);backdrop-filter:blur(16px) saturate(170%);
+  box-shadow:inset 0 1px 0 var(--dsl-glass-shine),0 1px 2px color-mix(in srgb,var(--dsw-alias-label-primary) 5%,transparent),
+    0 6px 18px color-mix(in srgb,var(--dsw-alias-label-primary) 6%,transparent);
+  font:inherit;font-size:12.5px;line-height:1.4;color:inherit;
+  transition:border-color .15s ease,box-shadow .15s ease,transform .15s ease;}
 button.dsl-map-box{cursor:pointer;}
-button.dsl-map-box:hover{--dsl-map-tint:color-mix(in srgb,var(--dsw-alias-bg-base) 72%,var(--dsl-map-accent));}
-.dsl-map-box--live{box-shadow:inset 0 0 0 1px var(--dsw-alias-brand-primary),var(--dsl-map-shadow);
-  border-color:var(--dsw-alias-brand-primary);}
-.dsl-map-box.dsl-map-box--error{--dsl-map-accent:var(--dsw-alias-state-error-primary);border-color:var(--dsl-map-accent);}
-.dsl-map-box:focus-visible{outline:2px solid var(--dsw-alias-brand-primary);outline-offset:1px;}
-.dsl-map-name,.dsl-map-subject{max-width:100%;overflow:hidden;text-overflow:ellipsis;}
-.dsl-map-name{display:-webkit-box;-webkit-box-orient:vertical;-webkit-line-clamp:2;font-weight:650;overflow-wrap:anywhere;}
-.dsl-map-subject{white-space:nowrap;}
-.dsl-map-no,.dsl-map-subject{font-size:10px;color:var(--dsw-alias-label-secondary);}
-.dsl-map-no::before{content:"";display:inline-block;width:5px;height:5px;margin-inline-end:4px;
-  vertical-align:2px;border-radius:50%;background:var(--dsl-map-accent);}
-.dsl-map-purpose{display:-webkit-box;overflow:hidden;-webkit-box-orient:vertical;-webkit-line-clamp:2;
-  color:var(--dsw-alias-label-secondary);font-size:10.5px;overflow-wrap:anywhere;margin-top:2px;}
-.dsl-map-purpose-label{font-weight:600;}
-.dsl-map-box--live .dsl-map-no{color:var(--dsw-alias-brand-primary);}
-.dsl-map-box--error .dsl-map-no{color:var(--dsw-alias-state-error-primary);}
-.dsl-map-arrow{pointer-events:none;position:absolute;display:grid;place-items:center;font-size:12px;
-  color:var(--dsw-alias-label-secondary);line-height:1;}
-.dsl-map-arrow--right{top:0;bottom:0;right:-17px;width:17px;}
-.dsl-map-arrow--left{top:0;bottom:0;left:-17px;width:17px;}
-.dsl-map-arrow--down{left:0;right:0;bottom:-12px;height:12px;}
+button.dsl-map-box:hover{transform:translateY(-1px);border-color:color-mix(in srgb,var(--dsl-hue) 45%,var(--dsl-glass-edge));
+  box-shadow:inset 0 1px 0 var(--dsl-glass-shine),0 10px 26px color-mix(in srgb,var(--dsl-hue) 18%,transparent);}
+.dsl-map-box:focus-visible{outline:2px solid var(--dsw-alias-brand-primary);outline-offset:2px;}
+.dsl-map-box > .dsl-icon{align-self:start;margin-top:1px;}
+.dsl-map-box--terminal > .dsl-icon{align-self:center;margin-top:0;}
+.dsl-map-text{min-width:0;display:flex;flex-direction:column;gap:1px;}
+.dsl-map-line{display:flex;align-items:baseline;gap:6px;min-width:0;}
+.dsl-map-name{font-weight:600;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;flex:none;max-width:100%;}
+.dsl-map-subject{min-width:0;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;
+  font-family:ui-monospace,SFMono-Regular,Menlo,Consolas,monospace;font-size:11px;color:var(--dsw-alias-label-secondary);}
+.dsl-map-row{display:-webkit-box;-webkit-box-orient:vertical;-webkit-line-clamp:2;overflow:hidden;margin-top:2px;
+  font-size:11.5px;line-height:1.45;color:var(--dsw-alias-label-secondary);overflow-wrap:anywhere;}
+.dsl-map-row::before{content:attr(data-k);display:inline-block;margin-right:6px;padding:0 5px;border-radius:4px;
+  font-size:10px;font-weight:650;line-height:16px;vertical-align:1px;color:var(--dsw-alias-label-secondary);
+  background:color-mix(in srgb,var(--dsw-alias-label-primary) 6%,transparent);}
+.dsl-map-reason{color:var(--dsw-alias-label-primary);}
+.dsl-map-reason::before{color:#7a5af0;background:color-mix(in srgb,#7a5af0 12%,transparent);}
+.dsl-map-detail{-webkit-line-clamp:1;}
+.dsl-map-detail code{font-family:ui-monospace,SFMono-Regular,Menlo,Consolas,monospace;font-size:11px;
+  color:var(--dsw-alias-label-primary);}
+.dsl-map-outcome--ok::before{color:var(--dsw-alias-state-success-primary);
+  background:color-mix(in srgb,var(--dsw-alias-state-success-primary) 12%,transparent);}
+.dsl-map-outcome--error{color:var(--dsw-alias-state-error-primary);}
+.dsl-map-outcome--error::before{color:var(--dsw-alias-state-error-primary);
+  background:color-mix(in srgb,var(--dsw-alias-state-error-primary) 12%,transparent);}
+.dsl-map-status{align-self:flex-start;display:inline-flex;align-items:center;gap:5px;margin-top:4px;padding:1px 7px;border-radius:999px;
+  font-size:10.5px;font-weight:600;color:var(--dsw-alias-brand-primary);
+  background:color-mix(in srgb,var(--dsw-alias-brand-primary) 10%,transparent);}
+.dsl-map-status::before{content:"";width:6px;height:6px;border-radius:50%;background:currentColor;}
+.dsl-map-box--live .dsl-map-status::before{animation:dslPulse 1.4s ease-in-out infinite;}
+.dsl-map-box--error .dsl-map-status{color:var(--dsw-alias-state-error-primary);
+  background:color-mix(in srgb,var(--dsw-alias-state-error-primary) 10%,transparent);}
+.dsl-map-box--live{border-color:color-mix(in srgb,var(--dsw-alias-brand-primary) 70%,transparent);
+  background:linear-gradient(140deg,color-mix(in srgb,var(--dsw-alias-brand-primary) 14%,transparent),transparent 60%),var(--dsl-glass);
+  box-shadow:inset 0 1px 0 var(--dsl-glass-shine),0 0 0 3px color-mix(in srgb,var(--dsw-alias-brand-primary) 15%,transparent),
+    0 10px 26px color-mix(in srgb,var(--dsw-alias-brand-primary) 18%,transparent);}
+.dsl-map-box--error{border-color:color-mix(in srgb,var(--dsw-alias-state-error-primary) 60%,var(--dsw-alias-border-l1));}
+.dsl-map-box--terminal{display:inline-grid;grid-template-columns:22px auto;column-gap:8px;align-items:center;width:auto;padding:5px 12px 5px 6px;
+  border-radius:999px;}
+.dsl-map-box--terminal .dsl-icon{width:22px;height:22px;border-radius:50%;}
+.dsl-map-box--terminal .dsl-map-name{font-weight:600;font-size:12px;}
+@keyframes dslPulse{0%,100%{opacity:1;transform:scale(1);}50%{opacity:.35;transform:scale(.78);}}
+
+/* Full view: one column per step, read left to right */
+.dsl-map-scroll{padding:5px 6px 8px 4px;}
+.dsl-map-track{display:flex;align-items:flex-start;gap:0;width:max-content;min-width:100%;box-sizing:border-box;padding-right:8px;}
+.dsl-map-group{position:relative;display:flex;flex-direction:column;gap:6px;flex:none;width:236px;}
+.dsl-map-group--terminal{width:auto;padding-top:22px;}
+.dsl-map-group-label{height:16px;font-size:11px;font-weight:600;color:var(--dsw-alias-label-secondary);
+  font-variant-numeric:tabular-nums;letter-spacing:.02em;}
+.dsl-map-items{display:flex;flex-direction:column;gap:8px;}
+.dsl-map-link{flex:none;align-self:flex-start;position:relative;width:34px;height:2px;margin-top:44px;
+  background:var(--dsw-alias-border-l2);}
+.dsl-map-link::after{content:"";position:absolute;right:0;top:-3px;width:6px;height:6px;
+  border-top:2px solid var(--dsw-alias-border-l2);border-right:2px solid var(--dsw-alias-border-l2);
+  transform:rotate(45deg);box-sizing:border-box;}
+.dsl-map-link--pending{background:repeating-linear-gradient(90deg,var(--dsw-alias-border-l2) 0 4px,transparent 4px 8px);}
+
+/* Compact popover: a vertical rail */
+.dsl-map--compact .dsl-map-head{margin-bottom:10px;}
+.dsl-map--compact .dsl-map-hint{display:none;}
+.dsl-map--compact .dsl-map-scroll{max-height:min(420px,56vh);padding:10px 10px 10px 8px;}
+.dsl-map--compact .dsl-map-track{display:block;width:auto;min-width:0;position:relative;}
+.dsl-map--compact .dsl-map-track::before{content:"";position:absolute;left:23px;z-index:0;top:16px;bottom:16px;width:2px;
+  border-radius:1px;background:var(--dsw-alias-border-l1);}
+.dsl-map--compact .dsl-map-group{width:auto;gap:6px;padding:0 0 10px 0;}
+.dsl-map--compact .dsl-map-group--terminal{padding:0 0 10px 6px;}
+.dsl-map--compact .dsl-map-group:last-child{padding-bottom:0;}
+.dsl-map--compact .dsl-map-group-label{height:auto;padding-left:46px;}
+.dsl-map--compact .dsl-map-items{gap:6px;}
+.dsl-map--compact .dsl-map-box:not(.dsl-map-box--terminal){position:relative;}
+.dsl-map--compact .dsl-map-link{display:none;}
+
+
 .dsl-zoom-backdrop{position:fixed;inset:0;z-index:1200;display:flex;align-items:center;justify-content:center;
   padding:24px;background:color-mix(in srgb,var(--dsw-alias-bg-base) 68%,transparent);backdrop-filter:blur(3px);}
 .dsl-zoom{box-sizing:border-box;width:min(980px,94vw);max-height:88vh;display:flex;flex-direction:column;
-  border:1px solid var(--dsw-alias-border-l2);border-radius:14px;background:var(--dsw-alias-bg-base);
+  border:1px solid color-mix(in srgb,var(--dsw-alias-label-primary) 10%,transparent);border-radius:18px;
+  background:radial-gradient(ellipse 70% 50% at 0% 0%,color-mix(in srgb,#4d6bfe 12%,transparent),transparent 70%),
+    radial-gradient(ellipse 60% 50% at 100% 100%,color-mix(in srgb,#a855f7 10%,transparent),transparent 70%),
+    color-mix(in srgb,var(--dsw-alias-bg-base) 86%,transparent);
+  -webkit-backdrop-filter:blur(24px) saturate(160%);backdrop-filter:blur(24px) saturate(160%);
   color:var(--dsw-alias-label-primary);overflow:hidden;
   box-shadow:0 20px 60px color-mix(in srgb,var(--dsw-alias-label-primary) 18%,transparent);}
 .dsl-zoom-head{flex:none;display:flex;align-items:flex-start;gap:12px;padding:14px 18px;
@@ -2680,7 +2788,9 @@ button.dsl-map-box:hover{--dsl-map-tint:color-mix(in srgb,var(--dsw-alias-bg-bas
   border:1px solid var(--dsw-alias-border-l2);background:var(--dsw-alias-bg-layer-1);}
 .dsl-zoom-node--live{border-color:var(--dsw-alias-brand-primary);}
 .dsl-zoom-node--error{border-color:var(--dsw-alias-state-error-primary);}
-.dsl-zoom-node-icon{font-size:22px;line-height:1.1;flex:none;}
+.dsl-zoom-node-icon{flex:none;}
+.dsl-zoom-node-icon .dsl-icon{width:34px;height:34px;border-radius:10px;}
+.dsl-zoom-node-icon .dsl-icon svg{width:19px;height:19px;}
 .dsl-zoom-node-main{flex:1;min-width:0;}
 .dsl-zoom-node-title{font-size:16px;font-weight:650;overflow-wrap:anywhere;}
 .dsl-zoom-node-subject{font-family:ui-monospace,SFMono-Regular,Menlo,Consolas,monospace;font-size:12.5px;
@@ -2695,6 +2805,32 @@ button.dsl-map-box:hover{--dsl-map-tint:color-mix(in srgb,var(--dsw-alias-bg-bas
 .dsl-zoom-events .dsl-event-detail{border-top:0;}
 .dsl-zoom-events .dsl-original-text{max-height:none;}
 .dsl-zoom-events .dsl-event-data pre{max-height:none;}
+.dsl-learn{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:10px;}
+@container (max-width: 640px){.dsl-learn{grid-template-columns:minmax(0,1fr);}}
+@media (max-width: 640px){.dsl-learn{grid-template-columns:minmax(0,1fr);}}
+.dsl-learn-section{--dsl-hue:#4d6bfe;min-width:0;padding:12px 14px;border-radius:12px;
+  border:1px solid color-mix(in srgb,var(--dsw-alias-label-primary) 8%,transparent);
+  background:linear-gradient(140deg,color-mix(in srgb,var(--dsl-hue) 11%,transparent),transparent 60%),
+    color-mix(in srgb,var(--dsw-alias-bg-base) 60%,transparent);
+  box-shadow:inset 0 1px 0 color-mix(in srgb,color-mix(in srgb,var(--dsw-alias-bg-base) 30%,#fff) 45%,transparent);}
+.dsl-learn-section--why{--dsl-hue:#7a5af0;grid-column:1 / -1;}
+.dsl-learn-section--how{--dsl-hue:#2f6bf2;}
+.dsl-learn-section--got{--dsl-hue:#12a150;}
+.dsl-learn-section--error{--dsl-hue:var(--dsw-alias-state-error-primary);}
+.dsl-learn-section--tip{--dsl-hue:#c97a06;grid-column:1 / -1;}
+.dsl-learn-label{display:flex;align-items:center;gap:8px;margin:0 0 6px;font-size:12px;font-weight:700;color:var(--dsl-hue);}
+.dsl-learn-label::before{content:"";width:6px;height:6px;border-radius:50%;background:currentColor;}
+.dsl-learn-note{font-size:10.5px;font-weight:500;color:var(--dsw-alias-label-secondary);padding:0 6px;border-radius:4px;
+  background:color-mix(in srgb,var(--dsw-alias-label-primary) 6%,transparent);}
+.dsl-learn-text{margin:0;font-size:14px;line-height:1.7;overflow-wrap:anywhere;}
+.dsl-learn-section--why .dsl-learn-text{font-size:15px;}
+.dsl-learn-text--muted{color:var(--dsw-alias-label-secondary);font-size:13px;}
+.dsl-learn-sub{margin:8px 0 0;font-size:12.5px;line-height:1.65;color:var(--dsw-alias-label-secondary);}
+.dsl-learn-sub strong{color:var(--dsw-alias-label-primary);font-weight:600;}
+.dsl-learn-code{margin:8px 0 0;padding:8px 10px;border-radius:8px;white-space:pre-wrap;overflow-wrap:anywhere;max-height:180px;overflow:auto;
+  font-family:ui-monospace,SFMono-Regular,Menlo,Consolas,monospace;font-size:12px;line-height:1.55;
+  background:color-mix(in srgb,var(--dsw-alias-label-primary) 5%,transparent);}
+.dsl-learn-original{margin:6px 0 -2px;font-size:12px;font-weight:600;color:var(--dsw-alias-label-secondary);}
 `;
 
 function describeMapStep(step, t) {
@@ -2706,12 +2842,50 @@ function describeMapStep(step, t) {
   return { title: t(event ? 'note.' + event.noteKind : 'status.' + (step.live ? 'thinking' : 'unknown')), category: 'note' };
 }
 
+/** The literal thing an action did: the pattern, the command, the replaced text. */
+function concreteAction(item) {
+  const a = item.args || {};
+  const one = (value, n) => clip(firstLine(String(value), 400), n);
+  if (typeof a.command === 'string' && a.command.trim()) {
+    // Short commands teach at a glance; long scripts stay in the zoomed learning card.
+    const command = a.command.trim();
+    return command.length <= 48 && !/[\r\n]/.test(command) ? command : '';
+  }
+  if (typeof a.old_string === 'string' && typeof a.new_string === 'string') {
+    return one(a.old_string, 26) + '  →  ' + one(a.new_string, 26);
+  }
+  if (typeof a.pattern === 'string') return [one(a.pattern, 40), a.glob || a.include || ''].filter(Boolean).join('  ');
+  if (typeof a.query === 'string') return one(a.query, 60);
+  if (typeof a.url === 'string') return one(a.url, 60);
+  if (typeof a.offset === 'number' || typeof a.limit === 'number') {
+    return 'L' + (a.offset || 1) + (a.limit ? '–' + ((a.offset || 1) + a.limit - 1) : '');
+  }
+  return '';
+}
+
+/** One line on what the action returned, so the reader sees cause and effect. */
+function actionOutcome(item, t) {
+  if (item.status === 'error') return { text: clip(firstLine(item.error || item.result || t('status.failed'), 300), 60), tone: 'error' };
+  if (item.status !== 'ok') return null;
+  // A plain-language summary; the raw output stays in the zoomed learning card.
+  const result = typeof item.result === 'string' ? item.result.trim() : '';
+  const lines = result ? result.split(/\r?\n/).filter((line) => line.trim()).length : 0;
+  if (item.category === 'read') return result ? { text: t('readLines', { n: lines }), tone: 'ok' } : null;
+  if (item.category === 'search') return { text: lines ? t('foundN', { n: lines }) : t('foundNone'), tone: 'ok' };
+  if (item.category === 'write') return { text: t('savedOk'), tone: 'ok' };
+  if (item.category === 'run') return { text: t('ranOk'), tone: 'ok' };
+  if (item.category === 'web') return result ? { text: t('fetchedN', { n: result.length }), tone: 'ok' } : null;
+  return { text: t('status.done'), tone: 'ok' };
+}
+
+const same = (a, b) => !!a && !!b && a.replace(/[\s\p{P}]/gu, '') === b.replace(/[\s\p{P}]/gu, '');
+
 function flowNodes(turn, t, lang, actionContext) {
   const activeStep = turn.live ? turn.steps.findLast((step) => step.live || step.running || step.pending) : null;
   const activeAction = activeStep?.items.findLast((item) => item.kind === 'tool' && item.status === 'running')
     || activeStep?.items.findLast((item) => item.kind === 'tool' && item.status === 'pending');
   const activeKey = activeAction?.key || (activeStep ? 'step-' + activeStep.step : null);
-  const nodes = [{ key: 'start', title: t('overviewStart'), category: 'start' }];
+  const nodes = [{ key: 'start', title: t('overviewStart'), category: 'start', zoom: 'request' }];
   const shownReasoning = new Set();
   for (const step of turn.steps) {
     const actions = step.items.filter((item) => item.kind === 'tool');
@@ -2724,7 +2898,8 @@ function flowNodes(turn, t, lang, actionContext) {
       );
       const reason = reasoning && (!shownReasoning.has(reasoning) || action.key === activeKey) ? reasoning : '';
       const purpose = distinctDescription ? description : reason;
-      if (purpose && !distinctDescription) shownReasoning.add(reasoning);
+      if (reason) shownReasoning.add(reasoning);
+      const detail = concreteAction(action);
       nodes.push({
         key: action.key,
         actionKey: action.key,
@@ -2734,6 +2909,10 @@ function flowNodes(turn, t, lang, actionContext) {
         category: action.category,
         purpose,
         purposeLabel: t(distinctDescription ? 'overviewPurpose' : 'overviewReason'),
+        purposeKey: t(distinctDescription ? 'keyPurpose' : 'keyReason'),
+        reason: distinctDescription && reason && !same(reason, description) ? reason : '',
+        detail: detail && !same(detail, subject) && !same(detail, title) ? detail : '',
+        outcome: actionOutcome(action, t),
         tone: action.status === 'error' ? 'error' : action.key === activeKey ? 'live' : '',
         status: action.status === 'error' || action.status === 'running' || action.status === 'pending'
           ? t(TOOL_STATUS[action.status])
@@ -2752,36 +2931,163 @@ function flowNodes(turn, t, lang, actionContext) {
     }
   }
   if (turn.hasError || turn.status === 'closed') {
-    nodes.push({ key: 'finish', category: 'finish', tone: turn.hasError ? 'error' : '', title: t(turn.hasError ? 'overviewFailed' : 'overviewEnd') });
+    nodes.push({ key: 'finish', category: 'finish', zoom: 'finish', tone: turn.hasError ? 'error' : '', title: t(turn.hasError ? 'overviewFailed' : 'overviewEnd') });
   }
   return { nodes, activeKey };
+}
+
+const ICON_PATHS = {
+  start: 'M6 4v16M6 4.5h10.5l-2.2 3.6 2.2 3.6H6',
+  read: 'M7 3.5h7l4 4V20.5H7zM14 3.5v4h4M9.5 12h6M9.5 15.5h6',
+  search: 'M10.5 4.5a6 6 0 1 1 0 12a6 6 0 0 1 0-12zM15 15l4.5 4.5',
+  write: 'M4.5 19.5h4l10-10-4-4-10 10zM13 7l4 4',
+  run: 'M3.5 5h17v14h-17zM7.5 9.5l3 2.5-3 2.5M12.5 14.8h4',
+  web: 'M12 3.5a8.5 8.5 0 1 1 0 17a8.5 8.5 0 0 1 0-17zM3.5 12h17M12 3.5c2.3 2.4 3.5 5.2 3.5 8.5s-1.2 6.1-3.5 8.5c-2.3-2.4-3.5-5.2-3.5-8.5s1.2-6.1 3.5-8.5z',
+  collab: 'M9 11a3.3 3.3 0 1 0 0-6.6a3.3 3.3 0 0 0 0 6.6zM3 19.5c.6-3.3 3-5.5 6-5.5s5.4 2.2 6 5.5M16 4.6a3.2 3.2 0 0 1 0 6.2M18 14.2c1.8.8 3 2.6 3.3 5.3',
+  deliver: 'M12 3.5l7.5 4.2v8.6L12 20.5l-7.5-4.2V7.7zM4.5 7.7l7.5 4.2 7.5-4.2M12 11.9v8.6',
+  reasoning: 'M12 4l1.8 4.7L18.5 10.5l-4.7 1.8L12 17l-1.8-4.7L5.5 10.5l4.7-1.8zM18 15.5l.7 1.8 1.8.7-1.8.7-.7 1.8-.7-1.8-1.8-.7 1.8-.7z',
+  answer: 'M4.5 5h15v10.5H9.5l-5 4zM8.5 9.2h7M8.5 12h4.5',
+  note: 'M12 4l8.5 15h-17zM12 10v4M12 16.8v.2',
+  finish: 'M12 3.5a8.5 8.5 0 1 1 0 17a8.5 8.5 0 0 1 0-17zM8.2 12.2l2.6 2.6 5-5.3',
+  other: 'M12 8.8a3.2 3.2 0 1 1 0 6.4a3.2 3.2 0 0 1 0-6.4zM12 3.5v2.6M12 17.9v2.6M3.5 12h2.6M17.9 12h2.6M6 6l1.8 1.8M16.2 16.2L18 18M6 18l1.8-1.8M16.2 7.8L18 6',
+};
+
+/** Small tinted line icon; colour comes from the category, nothing else. */
+function CategoryIcon({ category, error = false }) {
+  const key = error ? 'note' : Object.hasOwn(ICON_PATHS, category) ? category : 'other';
+  return h(
+    'span',
+    { className: 'dsl-icon', 'data-category': error ? 'error' : category, 'aria-hidden': true },
+    h('svg', { viewBox: '0 0 24 24', fill: 'none', stroke: 'currentColor', strokeWidth: 1.7, strokeLinecap: 'round', strokeLinejoin: 'round' },
+      h('path', { d: ICON_PATHS[key] })),
+  );
+}
+
+
+/** Icon category for one recorded event in the detailed list. */
+function eventCategory(item) {
+  if (item.kind === 'tool') return item.category || 'other';
+  if (item.kind === 'think') return 'reasoning';
+  if (item.kind === 'message') return 'answer';
+  return 'note';
+}
+
+/** The plugin mark: a lens over three connected flow nodes. */
+function LensMark() {
+  const id = 'dsl-lens-' + React.useId().replace(/[^\w-]/g, '');
+  return h(
+    'svg',
+    { viewBox: '0 0 40 40', fill: 'none' },
+    h('defs', null, h('linearGradient', { id, x1: 0, y1: 0, x2: 1, y2: 1 },
+      h('stop', { offset: 0, stopColor: '#4d6bfe' }), h('stop', { offset: 1, stopColor: '#7a5af0' }))),
+    h('rect', { x: 1, y: 1, width: 38, height: 38, rx: 11, fill: 'url(#' + id + ')' }),
+    h('path', { d: 'M12.5 14.5h4.5M16.5 14.5l3.5 5.5M20 20h-4.5', stroke: '#fff', strokeOpacity: 0.55, strokeWidth: 1.6, strokeLinecap: 'round' }),
+    h('circle', { cx: 12, cy: 14.5, r: 2.3, fill: '#fff' }),
+    h('circle', { cx: 20.5, cy: 14.5, r: 2.3, fill: '#fff', fillOpacity: 0.85 }),
+    h('circle', { cx: 14, cy: 21, r: 2.3, fill: '#fff', fillOpacity: 0.7 }),
+    h('circle', { cx: 18, cy: 18, r: 9.5, stroke: '#fff', strokeWidth: 2.4 }),
+    h('path', { d: 'M25 25l6 6', stroke: '#fff', strokeWidth: 2.8, strokeLinecap: 'round' }),
+  );
+}
+
+/** Group consecutive nodes that belong to the same step. */
+function groupFlowNodes(nodes) {
+  const groups = [];
+  for (const node of nodes) {
+    const last = groups.at(-1);
+    if (node.step != null && last && last.step === node.step) last.nodes.push(node);
+    else groups.push({ key: 'g-' + node.key, step: node.step, nodes: [node] });
+  }
+  return groups;
 }
 
 function FlowOverview({ turn, t, lang, compact = false, visible = true, actionContext, onStep }) {
   const viewport = React.useRef(null);
   const activeCell = React.useRef(null);
-  const [columns, setColumns] = React.useState(compact ? 3 : 6);
   const { nodes: graph, activeKey } = flowNodes(turn, t, lang, actionContext);
-  React.useEffect(() => {
-    const element = viewport.current;
-    if (!element || typeof ResizeObserver !== 'function') return undefined;
-    const observer = new ResizeObserver(([entry]) => {
-      const width = entry.contentRect.width;
-      setColumns(Math.max(1, Math.min(compact ? 3 : 7, Math.floor((width + 17) / (compact ? 120 : 135)))));
-    });
-    observer.observe(element);
-    return () => observer.disconnect();
-  }, [compact]);
+  const groups = groupFlowNodes(graph);
+  const actions = graph.filter((node) => node.actionKey).length;
   React.useEffect(() => {
     const element = viewport.current;
     const cell = activeCell.current;
-    if (!visible || !element || !cell) return;
-    const top = cell.offsetTop;
-    const bottom = top + cell.offsetHeight;
-    if (top < element.scrollTop) element.scrollTop = top;
-    else if (bottom > element.scrollTop + element.clientHeight) element.scrollTop = bottom - element.clientHeight;
-  }, [visible, activeKey, columns]);
-  const arrows = { right: '→', left: '←', down: '↓' };
+    if (!visible || !element || !cell || typeof cell.getBoundingClientRect !== 'function') return;
+    const outer = element.getBoundingClientRect();
+    const inner = cell.getBoundingClientRect();
+    if (inner.top < outer.top) element.scrollTop += inner.top - outer.top - 8;
+    else if (inner.bottom > outer.bottom) element.scrollTop += inner.bottom - outer.bottom + 8;
+    if (inner.left < outer.left) element.scrollLeft += inner.left - outer.left - 16;
+    else if (inner.right > outer.right) element.scrollLeft += inner.right - outer.right + 16;
+  }, [visible, activeKey]);
+  const progress = [t('metaSteps', { n: turn.stepCount }), t('metaTools', { n: actions })].join(' · ');
+
+  const renderBox = (node) => {
+    const stepNumber = node.step == null ? '' : t('stepNumber', { k: node.step });
+    const badge = [stepNumber, node.status].filter(Boolean).join(' · ');
+    const actionable = !!onStep && (node.step != null || !!node.zoom);
+    const current = node.key === activeKey;
+    const terminal = node.category === 'start' || node.category === 'finish';
+    const purposePreview = lang === 'zh'
+      ? clip(node.purpose?.replace(/^(?:让我(?:也|先)?|我(?:们)?(?:也|先)?(?:需要|应该))\s*/, ''), 60)
+      : clip(node.purpose, 110);
+    const classes = ['dsl-map-box'];
+    if (node.tone) classes.push('dsl-map-box--' + node.tone);
+    if (terminal) classes.push('dsl-map-box--terminal');
+    return h(
+      'li',
+      { className: 'dsl-map-cell', key: node.key, ref: current ? activeCell : undefined },
+      h(
+        actionable ? 'button' : 'div',
+        {
+          className: classes.join(' '),
+          'data-category': node.category,
+          'aria-current': current ? 'step' : undefined,
+          title: [badge, node.title, node.subject, node.purpose ? node.purposeLabel + ' · ' + node.purpose : ''].filter(Boolean).join(' · '),
+          ...(actionable ? { type: 'button', onClick: () => onStep(node.step ?? null, node.actionKey, node.zoom) } : {}),
+        },
+        h(CategoryIcon, { category: node.category, error: node.tone === 'error' && !terminal }),
+        h(
+          'span',
+          { className: 'dsl-map-text' },
+          badge ? h('span', { className: 'dsl-map-no dsl-sr' }, badge) : null,
+          h(
+            'span',
+            { className: 'dsl-map-line' },
+            h('span', { className: 'dsl-map-name' }, node.title),
+            node.subject ? h('span', { className: 'dsl-map-subject' }, node.subject) : null,
+          ),
+          node.purpose
+            ? h('span', { className: 'dsl-map-row dsl-map-purpose', 'data-k': node.purposeKey }, h('span', { className: 'dsl-sr' }, node.purposeLabel + ' · '), purposePreview)
+            : null,
+          node.reason
+            ? h('span', { className: 'dsl-map-row dsl-map-reason', 'data-k': t('keyReason') }, clip(node.reason, lang === 'zh' ? 60 : 110))
+            : null,
+          node.detail
+            ? h('span', { className: 'dsl-map-row dsl-map-detail', 'data-k': t('keyAction') }, h('code', null, node.detail))
+            : null,
+          node.outcome
+            ? h('span', { className: 'dsl-map-row dsl-map-outcome dsl-map-outcome--' + node.outcome.tone, 'data-k': t('keyResult') }, node.outcome.text)
+            : null,
+          node.status ? h('span', { className: 'dsl-map-status', 'aria-hidden': true }, node.status) : null,
+        ),
+      ),
+    );
+  };
+
+  const track = [];
+  groups.forEach((group, index) => {
+    const terminal = group.step == null;
+    if (index > 0) {
+      const pending = !!turn.live && index === groups.length - 1;
+      track.push(h('li', { key: 'link-' + group.key, className: 'dsl-map-link' + (pending ? ' dsl-map-link--pending' : ''), 'aria-hidden': true }));
+    }
+    track.push(h(
+      'li',
+      { key: group.key, className: 'dsl-map-group' + (terminal ? ' dsl-map-group--terminal' : '') },
+      terminal ? null : h('div', { className: 'dsl-map-group-label', 'aria-hidden': true }, t('stepNumber', { k: group.step })),
+      h('ol', { className: 'dsl-map-items', role: 'list' }, group.nodes.map(renderBox)),
+    ));
+  });
+
   return h(
     'section',
     { className: 'dsl-map' + (compact ? ' dsl-map--compact' : ''), 'aria-label': t('overviewTitle') },
@@ -2789,52 +3095,10 @@ function FlowOverview({ turn, t, lang, compact = false, visible = true, actionCo
       'div',
       { className: 'dsl-map-head' },
       h(compact ? 'strong' : 'h3', { className: 'dsl-map-title' }, t('overviewTitle')),
+      turn.steps.length ? h('span', { className: 'dsl-map-progress' }, progress) : null,
       onStep ? h('p', { className: 'dsl-map-hint' }, t('overviewHint')) : null,
     ),
-    h(
-      'div',
-      { className: 'dsl-map-scroll', ref: viewport },
-      h(
-        'ol',
-        { className: 'dsl-map-grid', role: 'list', style: { gridTemplateColumns: 'repeat(' + columns + ', minmax(0, 1fr))' } },
-        graph.map((node, index) => {
-          const row = Math.floor(index / columns);
-          const offset = index % columns;
-          const forward = row % 2 === 0;
-          const column = forward ? offset + 1 : columns - offset;
-          const direction = offset === columns - 1 ? 'down' : forward ? 'right' : 'left';
-          const stepNumber = node.step == null ? '' : t('stepNumber', { k: node.step });
-          const badge = [stepNumber, node.status].filter(Boolean).join(' · ');
-          const actionable = onStep && node.step != null;
-          const current = node.key === activeKey;
-          const purpose = node.purpose ? node.purposeLabel + ' · ' + node.purpose : '';
-          const purposePreview = lang === 'zh'
-            ? clip(node.purpose?.replace(/^(?:让我(?:也|先)?|我(?:们)?(?:也|先)?(?:需要|应该))\s*/, ''), 52)
-            : clip(node.purpose, 100);
-          return h(
-            'li',
-            { className: 'dsl-map-cell', key: node.key, ref: current ? activeCell : undefined, style: { gridRow: row + 1, gridColumn: column } },
-            h(
-              actionable ? 'button' : 'div',
-              {
-                className: 'dsl-map-box' + (node.tone ? ' dsl-map-box--' + node.tone : ''),
-                'data-category': node.category,
-                'aria-current': current ? 'step' : undefined,
-                title: [badge, node.title, node.subject, purpose].filter(Boolean).join(' · '),
-                ...(actionable ? { type: 'button', onClick: () => onStep(node.step, node.actionKey) } : {}),
-              },
-              badge ? h('span', { className: 'dsl-map-no' }, badge) : null,
-              h('span', { className: 'dsl-map-name' }, node.title),
-              node.subject ? h('span', { className: 'dsl-map-subject' }, node.subject) : null,
-              node.purpose ? h('span', { className: 'dsl-map-purpose' }, h('span', { className: 'dsl-map-purpose-label' }, node.purposeLabel + ' · '), purposePreview) : null,
-            ),
-            index < graph.length - 1
-              ? h('span', { className: 'dsl-map-arrow dsl-map-arrow--' + direction, 'aria-hidden': true }, arrows[direction])
-              : null,
-          );
-        }),
-      ),
-    ),
+    h('div', { className: 'dsl-map-scroll', ref: viewport }, h('ol', { className: 'dsl-map-track', role: 'list' }, track)),
     !turn.steps.length && turn.live ? h('p', { className: 'dsl-map-empty' }, t('overviewEmpty')) : null,
   );
 }
@@ -3050,7 +3314,7 @@ function EventNode({ item, t, lang, actionContext, registerAction, expanded = fa
     h(
       'div',
       { className: 'dsl-event-main' },
-      h('span', { className: 'dsl-event-icon', 'aria-hidden': true }, item.icon),
+      h('span', { className: 'dsl-event-icon', 'aria-hidden': true }, h(CategoryIcon, { category: eventCategory(item), error: tone === 'error' })),
       h('span', { className: 'dsl-event-title' }, title),
       action?.subject ? h('span', { className: 'dsl-event-subject' }, action.subject) : null,
       statusText
@@ -3126,6 +3390,29 @@ function findZoomItem(items, key) {
 }
 
 /** Title used by the zoom dialog for one flow node. */
+/** Turn a clicked node into what the zoom dialog should show. */
+function resolveZoom(turn, target) {
+  if (!target) return null;
+  if (target.kind === 'request') return { request: turn.goal || '', step: { step: 0, items: [] }, actionKey: null };
+  if (target.kind === 'finish') {
+    const step = turn.steps.findLast((entry) => entry.messageCount > 0 || entry.hasError) || turn.steps.at(-1);
+    return step ? { step, actionKey: null, finish: true } : null;
+  }
+  const step = turn.steps.find((entry) => entry.step === target.step);
+  return step ? { step, actionKey: target.actionKey } : null;
+}
+
+/** Kicker and title for the zoom dialog. */
+function zoomHeading(turn, zoom, t, lang, actionContext) {
+  const turnName = t('turnN', { n: turn.turn });
+  if (zoom.request != null) return { kicker: turnName, title: t('requestDetails') };
+  if (zoom.finish) return { kicker: turnName, title: t('finishDetails') };
+  return {
+    kicker: [turnName, t('stepN', { k: zoom.step.step, total: turn.stepCount })].join(' · '),
+    title: zoomTargetTitle(turn, zoom.step, zoom.actionKey, t, lang, actionContext),
+  };
+}
+
 function zoomTargetTitle(turn, step, actionKey, t, lang, actionContext) {
   const item = actionKey ? findZoomItem(step.items, actionKey) : null;
   if (!item) return t('stepN', { k: step.step, total: turn.stepCount });
@@ -3137,8 +3424,47 @@ function zoomTargetTitle(turn, step, actionKey, t, lang, actionContext) {
  * Full, unscaled detail for one flow node: a large node header plus the
  * complete event list with every collapsible section already open.
  */
+function LearnSection({ label, tone, children, note }) {
+  return h(
+    'section',
+    { className: 'dsl-learn-section' + (tone ? ' dsl-learn-section--' + tone : '') },
+    h('h4', { className: 'dsl-learn-label' }, label, note ? h('span', { className: 'dsl-learn-note' }, note) : null),
+    children,
+  );
+}
+
+/** Reasoning → action → result for one action, written for someone learning from it. */
+function LearnCard({ item, t, lang, actionContext }) {
+  const reason = actionContext.summaries.get(item.key);
+  const description = actionContext.descriptions.get(item.key);
+  const translated = lang === 'zh' && !!reason && !/\p{Script=Han}/u.test(item.priorReasoning || '');
+  const detail = item.args && typeof item.args.command === 'string' ? item.args.command.trim() : concreteAction(item);
+  const outcome = actionOutcome(item, t);
+  const result = item.status === 'error' ? item.error || item.result : item.result;
+  return h(
+    'div',
+    { className: 'dsl-learn' },
+    h(LearnSection, { label: t('learnWhy'), tone: 'why', note: translated ? t('learnTranslated') : '' },
+      h('p', { className: 'dsl-learn-text' + (reason ? '' : ' dsl-learn-text--muted') }, reason || t('learnNoReason'))),
+    h(LearnSection, { label: t('learnHow'), tone: 'how' },
+      description ? h('p', { className: 'dsl-learn-text' }, description) : null,
+      detail ? h('pre', { className: 'dsl-learn-code' }, detail) : null,
+      item.what ? h('p', { className: 'dsl-learn-sub' }, h('strong', null, t('learnTool') + '：'), item.what) : null),
+    outcome || result
+      ? h(LearnSection, { label: t('learnGot'), tone: outcome?.tone === 'error' ? 'error' : 'got' },
+          outcome ? h('p', { className: 'dsl-learn-text' }, outcome.text) : null,
+          result ? h('pre', { className: 'dsl-learn-code dsl-learn-code--result' }, clip(result, 1200)) : null)
+      : null,
+    item.why ? h(LearnSection, { label: t('learnTip'), tone: 'tip' }, h('p', { className: 'dsl-learn-text' }, item.why)) : null,
+  );
+}
+
 function ZoomContent(props) {
-  const { turn, step, actionKey, t, lang, actionContext, onLocate } = props;
+  const { turn, step, actionKey, t, lang, actionContext, onLocate, request } = props;
+  if (request != null) {
+    return h('div', { className: 'dsl-zoom-content' },
+      h(LearnSection, { label: t('goalLabel'), tone: 'how' }, renderMarkdown(request || t('untitledTurn'))));
+  }
   if (!step) return null;
   const item = actionKey ? findZoomItem(step.items, actionKey) : null;
   const action = item ? describeToolAction(item, lang, t, actionContext.descriptions.get(item.key)) : null;
@@ -3172,7 +3498,7 @@ function ZoomContent(props) {
     h(
       'div',
       { className: 'dsl-zoom-node' + (tone ? ' dsl-zoom-node--' + tone : '') },
-      h('span', { className: 'dsl-zoom-node-icon', 'aria-hidden': true }, item ? item.icon : '🧭'),
+      h('span', { className: 'dsl-zoom-node-icon', 'aria-hidden': true }, h(CategoryIcon, { category: item ? eventCategory(item) : 'reasoning', error: tone === 'error' })),
       h(
         'div',
         { className: 'dsl-zoom-node-main' },
@@ -3185,7 +3511,8 @@ function ZoomContent(props) {
         metaParts.length ? h('div', { className: 'dsl-zoom-node-meta' }, metaParts.join(' · ')) : null,
       ),
     ),
-    h('p', { className: 'dsl-zoom-note' }, t('zoomHint')),
+    item && item.kind === 'tool' ? h(LearnCard, { item, t, lang, actionContext }) : null,
+    item ? h('h4', { className: 'dsl-learn-original' }, t('learnOriginal')) : h('p', { className: 'dsl-zoom-note' }, t('zoomHint')),
     onLocate
       ? h(
           'div',
@@ -3315,28 +3642,28 @@ function TurnDetail({ t, lang, turn, isLatest, live, now, previousTurn, onBackTo
   const statusClass = turn.hasError ? ' dsl-status--error' : live ? ' dsl-status--live' : '';
   const duration = turn.durationMs ?? (turn.startTime != null && live ? Math.max(0, now - turn.startTime) : null);
   const request = firstLine(turn.goal, 100);
-  const zoomStep = zoomTarget ? turn.steps.find((entry) => entry.step === zoomTarget.step) : null;
+  const zoom = resolveZoom(turn, zoomTarget);
   const zoomDialog =
-    zoomTarget && zoomStep
+    zoom
       ? h(
           ZoomDialog,
           {
             t,
-            kicker: [t('turnN', { n: turn.turn }), t('stepN', { k: zoomStep.step, total: turn.stepCount })].join(' · '),
-            title: zoomTargetTitle(turn, zoomStep, zoomTarget.actionKey, t, lang, actionContext),
+            ...zoomHeading(turn, zoom, t, lang, actionContext),
             onClose: () => setZoomTarget(null),
           },
           h(ZoomContent, {
             turn,
-            step: zoomStep,
-            actionKey: zoomTarget.actionKey,
+            step: zoom.step,
+            actionKey: zoom.actionKey,
+            request: zoom.request,
             t,
             lang,
             actionContext,
-            onLocate: () => {
+            onLocate: zoom.request != null ? undefined : () => {
               const target = zoomTarget;
               setZoomTarget(null);
-              setTimeout(() => jumpToStep(target.step, target.actionKey), 0);
+              setTimeout(() => jumpToStep(zoom.step.step, target.actionKey), 0);
             },
           }),
         )
@@ -3365,7 +3692,7 @@ function TurnDetail({ t, lang, turn, isLatest, live, now, previousTurn, onBackTo
         turn.toolErrorCount > 0 ? h(Chip, null, t('toolErrors', { n: turn.toolErrorCount })) : null,
       ),
     ),
-    h(FlowOverview, { turn, t, lang, actionContext, onStep: (stepNumber, actionKey) => setZoomTarget({ step: stepNumber, actionKey }) }),
+    h(FlowOverview, { turn, t, lang, actionContext, onStep: (stepNumber, actionKey, kind) => setZoomTarget(kind ? { kind } : { step: stepNumber, actionKey }) }),
     h(
       'div',
       { className: 'dsl-flow-head' },
@@ -3453,7 +3780,7 @@ function EmptyState(props) {
   return h(
     'div',
     { className: 'dsl-empty' },
-    h('span', { className: 'dsl-empty-icon' }, '🔎'),
+    h('span', { className: 'dsl-empty-icon', 'aria-hidden': true }, h(LensMark)),
     h('p', { className: 'dsl-empty-title' }, props.t('emptyTitle')),
     h('p', { className: 'dsl-empty-body' }, props.t('emptyBody')),
   );
@@ -3513,7 +3840,7 @@ function StepLensView(props) {
     h(
       'div',
       { className: 'dsl-header' },
-      h('span', { className: 'dsl-logo' }, '🔎'),
+      h('span', { className: 'dsl-logo', 'aria-hidden': true }, h(LensMark)),
       h(
         'div',
         { className: 'dsl-heading' },
@@ -3723,7 +4050,7 @@ function QuickFlow(props) {
 
   if (!turn) return null;
 
-  const zoomStep = zoomTarget ? turn.steps.find((entry) => entry.step === zoomTarget.step) : null;
+  const zoom = resolveZoom(turn, zoomTarget);
 
   const title = t('quickFlowTitle');
   const turnName = t('turnN', { n: turn.turn });
@@ -3791,20 +4118,19 @@ function QuickFlow(props) {
         compact: true,
         visible: open,
         actionContext,
-        onStep: (stepNumber, actionKey) => {
+        onStep: (stepNumber, actionKey, kind) => {
           const popup = popupRef.current;
           if (popup && popup.matches(':popover-open')) popup.hidePopover();
-          setZoomTarget({ step: stepNumber, actionKey });
+          setZoomTarget(kind ? { kind } : { step: stepNumber, actionKey });
         },
       }),
     ),
-    zoomTarget && zoomStep
+    zoom
       ? h(
           ZoomDialog,
           {
             t,
-            kicker: [t('turnN', { n: turn.turn }), t('stepN', { k: zoomStep.step, total: turn.stepCount })].join(' · '),
-            title: zoomTargetTitle(turn, zoomStep, zoomTarget.actionKey, t, lang, actionContext),
+            ...zoomHeading(turn, zoom, t, lang, actionContext),
             onClose: () => {
               setZoomTarget(null);
               triggerRef.current?.focus({ preventScroll: true });
@@ -3812,8 +4138,9 @@ function QuickFlow(props) {
           },
           h(ZoomContent, {
             turn,
-            step: zoomStep,
-            actionKey: zoomTarget.actionKey,
+            step: zoom.step,
+            actionKey: zoom.actionKey,
+            request: zoom.request,
             t,
             lang,
             actionContext,

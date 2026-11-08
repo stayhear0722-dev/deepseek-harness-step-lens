@@ -6,7 +6,8 @@ import {
   useLensModel,
   ZoomContent,
   ZoomDialog,
-  zoomTargetTitle,
+  resolveZoom,
+  zoomHeading,
 } from './view.js';
 
 // A dismissed live round stays dismissed even when its header is remounted.
@@ -128,7 +129,7 @@ function QuickFlow(props) {
 
   if (!turn) return null;
 
-  const zoomStep = zoomTarget ? turn.steps.find((entry) => entry.step === zoomTarget.step) : null;
+  const zoom = resolveZoom(turn, zoomTarget);
 
   const title = t('quickFlowTitle');
   const turnName = t('turnN', { n: turn.turn });
@@ -196,20 +197,19 @@ function QuickFlow(props) {
         compact: true,
         visible: open,
         actionContext,
-        onStep: (stepNumber, actionKey) => {
+        onStep: (stepNumber, actionKey, kind) => {
           const popup = popupRef.current;
           if (popup && popup.matches(':popover-open')) popup.hidePopover();
-          setZoomTarget({ step: stepNumber, actionKey });
+          setZoomTarget(kind ? { kind } : { step: stepNumber, actionKey });
         },
       }),
     ),
-    zoomTarget && zoomStep
+    zoom
       ? h(
           ZoomDialog,
           {
             t,
-            kicker: [t('turnN', { n: turn.turn }), t('stepN', { k: zoomStep.step, total: turn.stepCount })].join(' · '),
-            title: zoomTargetTitle(turn, zoomStep, zoomTarget.actionKey, t, lang, actionContext),
+            ...zoomHeading(turn, zoom, t, lang, actionContext),
             onClose: () => {
               setZoomTarget(null);
               triggerRef.current?.focus({ preventScroll: true });
@@ -217,8 +217,9 @@ function QuickFlow(props) {
           },
           h(ZoomContent, {
             turn,
-            step: zoomStep,
-            actionKey: zoomTarget.actionKey,
+            step: zoom.step,
+            actionKey: zoom.actionKey,
+            request: zoom.request,
             t,
             lang,
             actionContext,
