@@ -1,0 +1,6 @@
+{
+  "meta": {
+    "title": "AI Step Lens",
+    "description": "Adds a Learn view to every conversation that explains each AI step — its reasoning and tool calls — in plain language."
+  }
+}

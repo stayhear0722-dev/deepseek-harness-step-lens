@@ -1,0 +1,6 @@
+# Windows x64 CPython 3.13 wheels from PyPI.
+ctranslate2==4.8.0 --hash=sha256:f6ab3fa77a0a4259deaf7f23979c9182974d45857873211d417fdf364a55cac5
+sentencepiece==0.2.1 --hash=sha256:10ed3dab2044c47f7a2e7b4969b0c430420cdd45735d78c8f853191fa0e3148b
+numpy==2.4.2 --hash=sha256:7df2de1e4fba69a51c06c28f5a3de36731eb9639feb8e1cf7e4a7b0daf4cf622
+PyYAML==6.0.3 --hash=sha256:79005a0d97d5ddabfeeea4cf676af11e647e41d81c9a7722a193022accdb6b7c
+setuptools==80.9.0 --hash=sha256:062d34222ad13e0cc312a4c02d73f059e86a4acbfbdea8f8f76b28c99f306922

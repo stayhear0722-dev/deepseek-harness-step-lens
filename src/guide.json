@@ -1,0 +1,362 @@
+{
+  "categories": {
+    "read": { "zh": "读取", "en": "Read" },
+    "search": { "zh": "搜索", "en": "Search" },
+    "write": { "zh": "修改", "en": "Edit" },
+    "run": { "zh": "执行", "en": "Run" },
+    "web": { "zh": "联网", "en": "Web" },
+    "collab": { "zh": "协作", "en": "Collaborate" },
+    "deliver": { "zh": "交付", "en": "Deliver" },
+    "other": { "zh": "其他", "en": "Other" }
+  },
+  "tools": {
+    "read": {
+      "category": "read",
+      "title": { "zh": "读取文件", "en": "Read a file" },
+      "what": { "zh": "按行打开一个文本文件，把里面的内容读进来。", "en": "Opens a text file and reads its lines into the conversation." },
+      "why": { "zh": "先看到真实内容再判断，避免凭印象猜测。", "en": "Looks at the real content before deciding instead of guessing." }
+    },
+    "glob": {
+      "category": "search",
+      "title": { "zh": "按名称找文件", "en": "Find files by name" },
+      "what": { "zh": "用文件名或通配符在目录里查找文件路径。", "en": "Searches folders for file paths that match a name pattern." },
+      "why": { "zh": "先摸清有哪些文件，再决定从哪里下手。", "en": "Maps out what files exist before deciding where to start." }
+    },
+    "grep": {
+      "category": "search",
+      "title": { "zh": "搜索文件内容", "en": "Search file contents" },
+      "what": { "zh": "按关键词或规则搜索很多文件里的文字。", "en": "Searches the text inside many files for a keyword or pattern." },
+      "why": { "zh": "直接定位相关代码，省去逐个打开文件。", "en": "Jumps straight to relevant code instead of opening every file." }
+    },
+    "write": {
+      "category": "write",
+      "title": { "zh": "写入文件", "en": "Write a file" },
+      "what": { "zh": "新建一个文件，或用新内容整体替换旧文件。", "en": "Creates a file, or replaces a whole file with new content." },
+      "why": { "zh": "把想好的结果真正保存到磁盘上，做出改动。", "en": "Turns a decision into a real change saved on disk." }
+    },
+    "edit": {
+      "category": "write",
+      "title": { "zh": "修改文件", "en": "Edit a file" },
+      "what": { "zh": "把文件里的一小段文字替换成新的文字。", "en": "Replaces one exact piece of text inside a file." },
+      "why": { "zh": "只改需要改的地方，不碰其他内容，更安全。", "en": "Changes only what is needed and leaves the rest untouched." }
+    },
+    "read_image": {
+      "category": "read",
+      "title": { "zh": "查看图片", "en": "View an image" },
+      "what": { "zh": "打开一张图片，看到它上面画了什么。", "en": "Opens an image file and shows its visual content." },
+      "why": { "zh": "有些信息用眼睛看，比读文字描述更准确。", "en": "Some information is clearer seen than described in words." }
+    },
+    "pwsh": {
+      "category": "run",
+      "title": { "zh": "运行命令行", "en": "Run a shell command" },
+      "what": { "zh": "在电脑上执行一条 PowerShell 命令。", "en": "Runs a PowerShell command on the computer." },
+      "why": { "zh": "借用现成工具完成检查、构建等实际动作。", "en": "Uses existing tools to inspect, build, or test things for real." }
+    },
+    "bash": {
+      "category": "run",
+      "title": { "zh": "运行终端命令", "en": "Run a bash command" },
+      "what": { "zh": "在系统终端里执行一条 bash 命令。", "en": "Runs a bash command in the system terminal." },
+      "why": { "zh": "真正动手执行任务，而不是停留在讨论上。", "en": "Actually does the job with system tools instead of just talking." }
+    },
+    "working_directory": {
+      "category": "run",
+      "title": { "zh": "切换工作目录", "en": "Change working folder" },
+      "what": { "zh": "查看或切换当前所在的文件夹位置。", "en": "Shows or changes the folder that commands run in." },
+      "why": { "zh": "站对位置，后面的文件操作才不会找错地方。", "en": "Standing in the right place keeps later file operations on target." }
+    },
+    "load_workspace_dependencies": {
+      "category": "run",
+      "title": { "zh": "查看可用工具库", "en": "Check bundled libraries" },
+      "what": { "zh": "获取本机自带 Python、Node 和库的安装位置。", "en": "Gets the paths of bundled Python, Node, and library folders." },
+      "why": { "zh": "用对现成环境，不必自己重装或猜版本。", "en": "Uses the provided environment instead of reinstalling or guessing." }
+    },
+    "job_list": {
+      "category": "run",
+      "title": { "zh": "查看后台任务", "en": "List background jobs" },
+      "what": { "zh": "列出正在后台运行的命令和任务。", "en": "Lists commands and jobs that are running in the background." },
+      "why": { "zh": "同时推进多件事时，随时掌握每件做到哪了。", "en": "Keeps track of several parallel tasks at the same time." }
+    },
+    "job_output": {
+      "category": "run",
+      "title": { "zh": "读取任务结果", "en": "Read job output" },
+      "what": { "zh": "查看某个后台任务目前的输出或结果。", "en": "Shows the current output or final result of a background job." },
+      "why": { "zh": "确认长任务真的成功了，再继续下一步。", "en": "Confirms a long job really succeeded before moving on." }
+    },
+    "job_kill": {
+      "category": "run",
+      "title": { "zh": "停止后台任务", "en": "Stop a background job" },
+      "what": { "zh": "请求取消一个还在运行的后台任务。", "en": "Requests cancellation of a background job that is still running." },
+      "why": { "zh": "方向不对就及时收手，避免浪费时间和资源。", "en": "Stops early when a path is wrong, saving time and resources." }
+    },
+    "web_search": {
+      "category": "web",
+      "title": { "zh": "联网搜索", "en": "Search the web" },
+      "what": { "zh": "在网上搜索，返回若干网页和简短摘要。", "en": "Searches the internet and returns matching pages with summaries." },
+      "why": { "zh": "补上不知道或已经过时的最新信息。", "en": "Fills gaps where knowledge is missing or out of date." }
+    },
+    "web_fetch": {
+      "category": "web",
+      "title": { "zh": "打开网页", "en": "Fetch a web page" },
+      "what": { "zh": "下载一个网页，把正文内容取回来。", "en": "Downloads one web page and returns its readable content." },
+      "why": { "zh": "深入读原始材料，而不是只看搜索摘要。", "en": "Reads the original source instead of trusting a short summary." }
+    },
+    "skill": {
+      "category": "other",
+      "title": { "zh": "加载技能说明", "en": "Load a skill" },
+      "what": { "zh": "载入一套预先写好的专门操作指南。", "en": "Loads a prepared set of detailed instructions for a task." },
+      "why": { "zh": "照着成熟流程做，复杂任务会更稳更规范。", "en": "Follows a proven procedure so complex work stays reliable." }
+    },
+    "todo_write": {
+      "category": "other",
+      "title": { "zh": "列出任务清单", "en": "Write a task list" },
+      "what": { "zh": "把要做的事整理成一份可勾选的清单。", "en": "Records the planned steps as a checklist and updates it." },
+      "why": { "zh": "把大事拆成小步，边做边看得见进度。", "en": "Breaks big work into visible steps and tracks progress." }
+    },
+    "present": {
+      "category": "deliver",
+      "title": { "zh": "交付成果", "en": "Deliver results" },
+      "what": { "zh": "把完成好的文件标记为交付物给用户。", "en": "Marks finished files as final deliverables for the user." },
+      "why": { "zh": "让用户一眼看到最终成果，而不用翻找文件。", "en": "Puts the finished result in front of the user instead of buried files." }
+    },
+    "ask_user_question": {
+      "category": "other",
+      "title": { "zh": "向用户确认", "en": "Ask the user" },
+      "what": { "zh": "暂停一下，向用户提出选择题或确认问题。", "en": "Pauses to ask the user a question or offer choices." },
+      "why": { "zh": "方向不清时先问清楚，比猜错后返工更省事。", "en": "Clarifying when unsure beats guessing and redoing work." }
+    },
+    "subagent": {
+      "category": "collab",
+      "title": { "zh": "派一个助手", "en": "Delegate to a helper" },
+      "what": { "zh": "把一件独立的事交给另一个 AI 助手去做。", "en": "Hands one self-contained task to a separate AI helper." },
+      "why": { "zh": "分头干活，主线程保持专注、不被打乱。", "en": "Working in parallel keeps the main thread focused and clean." }
+    },
+    "subagent_fork": {
+      "category": "collab",
+      "title": { "zh": "派生助手继续", "en": "Fork a helper" },
+      "what": { "zh": "开一个继承当前对话内容的新助手。", "en": "Starts a helper that inherits everything discussed so far." },
+      "why": { "zh": "后续分析接着现有背景做，不用重复解释。", "en": "Continues analysis with existing context instead of re-explaining." }
+    },
+    "workflow": {
+      "category": "collab",
+      "title": { "zh": "编排多助手", "en": "Run a workflow" },
+      "what": { "zh": "用脚本安排多个助手分批并行完成任务。", "en": "A script runs many helpers in parallel stages to finish a big job." },
+      "why": { "zh": "大范围重复工作交给机器统一调度，更快更全。", "en": "Fans out repetitive work at scale for speed and coverage." }
+    },
+    "spawn_teammate": {
+      "category": "collab",
+      "title": { "zh": "组建队友", "en": "Spawn a teammate" },
+      "what": { "zh": "创建一个可长期协作的队友助手并给它起名。", "en": "Creates a named teammate agent that can keep working with you." },
+      "why": { "zh": "让不同角色各管一摊，长期配合完成大项目。", "en": "Gives different roles their own lane for larger projects." }
+    },
+    "send_message": {
+      "category": "collab",
+      "title": { "zh": "给队友发消息", "en": "Message a teammate" },
+      "what": { "zh": "向另一个助手发送一条消息或补充要求。", "en": "Sends a message or extra instruction to another agent." },
+      "why": { "zh": "中途调整方向或补充信息，不必推翻重来。", "en": "Steers work mid-flight without starting over." }
+    },
+    "wait_agent": {
+      "category": "collab",
+      "title": { "zh": "等待队友", "en": "Wait for a teammate" },
+      "what": { "zh": "停下来等待某个助手完成当前工作。", "en": "Waits until a given agent finishes its current work." },
+      "why": { "zh": "只在确实需要结果时才等，避免空转和误判。", "en": "Waits only when the result is truly needed." }
+    },
+    "interrupt_agent": {
+      "category": "collab",
+      "title": { "zh": "叫停助手", "en": "Interrupt an agent" },
+      "what": { "zh": "要求某个正在工作的助手立即停下。", "en": "Asks a working agent to stop what it is doing." },
+      "why": { "zh": "发现走错方向就马上止损，省下时间。", "en": "Cuts losses the moment a direction turns out wrong." }
+    },
+    "list_agents": {
+      "category": "collab",
+      "title": { "zh": "查看助手列表", "en": "List agents" },
+      "what": { "zh": "列出所有助手以及它们当前的状态。", "en": "Lists all helper agents and what each one is doing." },
+      "why": { "zh": "先看清谁在忙什么，再决定下一步找谁。", "en": "Sees who is doing what before deciding whom to involve." }
+    },
+    "list_subagent_models": {
+      "category": "collab",
+      "title": { "zh": "查看可选模型", "en": "List helper models" },
+      "what": { "zh": "列出可给助手选用的模型与思考强度。", "en": "Lists which models and reasoning levels helpers can use." },
+      "why": { "zh": "按任务难度挑合适的脑力，兼顾效果和成本。", "en": "Matches model power to task difficulty for better value." }
+    },
+    "team_task_create": {
+      "category": "collab",
+      "title": { "zh": "新建团队任务", "en": "Create a team task" },
+      "what": { "zh": "在共享任务板上新建一条任务。", "en": "Adds a new task to the shared team task board." },
+      "why": { "zh": "把分工写下来，大家才不会重复或遗漏。", "en": "Writes down the split so nothing is duplicated or missed." }
+    },
+    "team_task_get": {
+      "category": "collab",
+      "title": { "zh": "查看团队任务", "en": "Read a team task" },
+      "what": { "zh": "读取任务板上某条任务的详细内容。", "en": "Reads the full details of one task on the shared board." },
+      "why": { "zh": "动手前确认任务的范围和当前状态。", "en": "Confirms scope and status before starting the work." }
+    },
+    "team_task_list": {
+      "category": "collab",
+      "title": { "zh": "浏览团队任务", "en": "List team tasks" },
+      "what": { "zh": "列出任务板上的所有任务和进展。", "en": "Lists every task on the board along with its progress." },
+      "why": { "zh": "从全局看整体分工，决定先做哪一件。", "en": "Sees the whole board to decide what to do next." }
+    },
+    "team_task_update": {
+      "category": "collab",
+      "title": { "zh": "更新团队任务", "en": "Update a team task" },
+      "what": { "zh": "修改任务的状态、负责人或说明。", "en": "Changes a task's status, owner, or description." },
+      "why": { "zh": "让队友随时看到最新进展，减少来回追问。", "en": "Keeps teammates current and avoids back-and-forth questions." }
+    },
+    "schedule_create": {
+      "category": "other",
+      "title": { "zh": "设置提醒", "en": "Create a reminder" },
+      "what": { "zh": "安排一条到点自动触发的提醒。", "en": "Schedules a reminder that fires at a chosen time." },
+      "why": { "zh": "把要等的事交给时间，不用一直守着。", "en": "Lets time handle waiting instead of watching the clock." }
+    },
+    "schedule_list": {
+      "category": "other",
+      "title": { "zh": "查看提醒", "en": "List reminders" },
+      "what": { "zh": "列出当前已经设置的所有提醒。", "en": "Lists all reminders currently set in the session." },
+      "why": { "zh": "确认哪些事已经安排好了、哪些还没做。", "en": "Checks what is already scheduled and still pending." }
+    },
+    "schedule_delete": {
+      "category": "other",
+      "title": { "zh": "删除提醒", "en": "Delete a reminder" },
+      "what": { "zh": "取消一条已经设置的提醒。", "en": "Removes a reminder that is no longer needed." },
+      "why": { "zh": "计划变了就清理掉，避免旧提醒造成干扰。", "en": "Cleans up when plans change so old reminders do not mislead." }
+    },
+    "schedule_update": {
+      "category": "other",
+      "title": { "zh": "修改提醒", "en": "Update a reminder" },
+      "what": { "zh": "调整已有提醒的时间或提醒内容。", "en": "Changes the time or content of an existing reminder." },
+      "why": { "zh": "小改动直接更新，比删掉重建更省事。", "en": "Adjusts in place instead of deleting and recreating." }
+    },
+    "session_search": {
+      "category": "search",
+      "title": { "zh": "搜索历史会话", "en": "Search past sessions" },
+      "what": { "zh": "在以前的对话记录里搜索相关内容。", "en": "Searches earlier session logs for matching content." },
+      "why": { "zh": "找回过去做过的事，避免重复劳动。", "en": "Recovers past work so it does not need redoing." }
+    },
+    "session_event_read": {
+      "category": "search",
+      "title": { "zh": "读取会话记录", "en": "Read session events" },
+      "what": { "zh": "打开某段历史会话，读取其中的事件。", "en": "Opens a past session and reads its recorded events." },
+      "why": { "zh": "复盘当时发生了什么，弄清来龙去脉。", "en": "Reconstructs what happened and why it happened." }
+    },
+    "session_event_search": {
+      "category": "search",
+      "title": { "zh": "搜索会话事件", "en": "Search session events" },
+      "what": { "zh": "在历史事件里按关键词查找。", "en": "Finds recorded events by keyword across sessions." },
+      "why": { "zh": "从大量记录里快速定位关键那一刻。", "en": "Pinpoints the key moment inside a large history." }
+    },
+    "session_event_trace": {
+      "category": "search",
+      "title": { "zh": "查看事件脉络", "en": "Trace session events" },
+      "what": { "zh": "查看某次操作前后的关联事件链条。", "en": "Shows the chain of related events around one action." },
+      "why": { "zh": "顺藤摸瓜，看清一步动作的因果。", "en": "Follows the chain to see cause and effect." }
+    },
+    "session_trace": {
+      "category": "search",
+      "title": { "zh": "追踪会话全程", "en": "Trace a session" },
+      "what": { "zh": "按顺序回看一次会话的完整过程。", "en": "Replays a whole session step by step in order." },
+      "why": { "zh": "整体复盘解决思路，提炼可复用的方法。", "en": "Reviews the whole approach and extracts reusable steps." }
+    },
+    "create_goal": {
+      "category": "other",
+      "title": { "zh": "设定长期目标", "en": "Create a goal" },
+      "what": { "zh": "登记一个会跨多轮持续推进的目标。", "en": "Registers an objective that persists across many rounds." },
+      "why": { "zh": "大任务需要连续性，不能做一半就断掉。", "en": "Big work needs continuity so it is not dropped halfway." }
+    },
+    "get_goal": {
+      "category": "other",
+      "title": { "zh": "查看当前目标", "en": "Read the current goal" },
+      "what": { "zh": "读取当前目标的内容和进度信息。", "en": "Reads the current goal and its progress details." },
+      "why": { "zh": "随时对表，确认没有跑偏或漏做。", "en": "Checks alignment so the work does not drift." }
+    },
+    "update_goal": {
+      "category": "other",
+      "title": { "zh": "更新目标状态", "en": "Update a goal" },
+      "what": { "zh": "修改目标内容，或标记完成、暂停。", "en": "Edits a goal or marks it done, paused, or blocked." },
+      "why": { "zh": "让目标始终反映真实情况，方便下次继续。", "en": "Keeps the goal truthful so work can resume properly." }
+    },
+    "cordis_inspect_list": {
+      "category": "other",
+      "title": { "zh": "列出可查插件", "en": "List plugin inspectors" },
+      "what": { "zh": "列出本机可查询的插件信息入口。", "en": "Lists the inspectors that can query plugins on this machine." },
+      "why": { "zh": "先看清有哪些接口，才知道能改什么。", "en": "Knows what is available before changing anything." }
+    },
+    "cordis_inspect_query": {
+      "category": "other",
+      "title": { "zh": "查询插件细节", "en": "Query plugin details" },
+      "what": { "zh": "向某个入口查询插件的具体配置和数据。", "en": "Asks one inspector for a plugin's exact settings and data." },
+      "why": { "zh": "基于真实配置动手，而不是凭猜测改。", "en": "Acts on real settings instead of guessing." }
+    },
+    "cordis_inspect_self": {
+      "category": "other",
+      "title": { "zh": "查看自身插件", "en": "Inspect this plugin" },
+      "what": { "zh": "查看当前插件自己的信息与结构。", "en": "Inspects the running plugin's own information and structure." },
+      "why": { "zh": "改自己之前先了解自己，避免改坏。", "en": "Understands itself before changing itself." }
+    },
+    "cordis_run": {
+      "category": "other",
+      "title": { "zh": "运行插件代码", "en": "Run plugin code" },
+      "what": { "zh": "在运行环境中执行一段插件脚本。", "en": "Executes a short plugin script in the live runtime." },
+      "why": { "zh": "马上试一下想法，比空想更快得到反馈。", "en": "Tests an idea immediately rather than theorizing." }
+    },
+    "cordis_define": {
+      "category": "other",
+      "title": { "zh": "定义插件", "en": "Define a plugin" },
+      "what": { "zh": "注册一个新的插件或其中一部分。", "en": "Registers a new plugin or one of its parts." },
+      "why": { "zh": "把想要的功能变成真正可用的东西。", "en": "Turns a desired feature into something that actually works." }
+    },
+    "cordis_stop": {
+      "category": "other",
+      "title": { "zh": "暂停插件", "en": "Stop a plugin" },
+      "what": { "zh": "让某个正在运行的插件停下来。", "en": "Stops a plugin that is currently running." },
+      "why": { "zh": "出问题先停住，避免影响继续扩大。", "en": "Halts first when something breaks to contain the damage." }
+    },
+    "cordis_undefine": {
+      "category": "other",
+      "title": { "zh": "移除插件", "en": "Remove a plugin" },
+      "what": { "zh": "从运行环境中彻底移除一个插件。", "en": "Removes a plugin entirely from the runtime." },
+      "why": { "zh": "不要的东西清理干净，减少隐患。", "en": "Cleans out what is not needed to reduce risk." }
+    },
+    "terminal_open": {
+      "category": "run",
+      "title": { "zh": "打开终端", "en": "Open a terminal" },
+      "what": { "zh": "开一个可以持续交互的终端会话。", "en": "Opens a terminal session you can keep interacting with." },
+      "why": { "zh": "需要反复输入的场景，用交互终端更顺手。", "en": "Interactive terminals suit tasks that need repeated input." }
+    },
+    "terminal_read": {
+      "category": "run",
+      "title": { "zh": "读取终端输出", "en": "Read terminal output" },
+      "what": { "zh": "查看终端里最新的输出内容。", "en": "Shows the latest output inside a terminal session." },
+      "why": { "zh": "看程序反馈，判断下一步该输入什么。", "en": "Reads feedback to decide the next input." }
+    },
+    "terminal_list": {
+      "category": "run",
+      "title": { "zh": "查看终端列表", "en": "List terminals" },
+      "what": { "zh": "列出当前所有打开的终端会话。", "en": "Lists every terminal session currently open." },
+      "why": { "zh": "同时开多个终端时，先确认操作哪一个。", "en": "With several terminals open, confirms which one to use." }
+    },
+    "terminal_signal": {
+      "category": "run",
+      "title": { "zh": "给终端发信号", "en": "Signal a terminal" },
+      "what": { "zh": "向终端进程发送中断等控制信号。", "en": "Sends a control signal such as an interrupt to a terminal." },
+      "why": { "zh": "程序卡住时能及时打断，不必干等。", "en": "Breaks out of a stuck program instead of waiting." }
+    },
+    "terminal_close": {
+      "category": "run",
+      "title": { "zh": "关闭终端", "en": "Close a terminal" },
+      "what": { "zh": "关闭一个已经开着的终端会话。", "en": "Closes an open terminal session." },
+      "why": { "zh": "用完就关，保持环境干净、不占资源。", "en": "Closes what is done to keep the environment clean." }
+    },
+    "lsp": {
+      "category": "search",
+      "title": { "zh": "查询代码信息", "en": "Look up code info" },
+      "what": { "zh": "查询代码里定义、引用和报错的位置。", "en": "Looks up where symbols are defined, used, or reported as errors." },
+      "why": { "zh": "用工具精确定位，比逐行翻文件更快更准。", "en": "Locates precisely instead of scrolling through files." }
+    },
+    "ralph": {
+      "category": "other",
+      "title": { "zh": "持续循环执行", "en": "Keep looping" },
+      "what": { "zh": "让助手反复执行直到任务完成。", "en": "Keeps the agent working in repeated rounds until done." },
+      "why": { "zh": "需要长时间打磨的任务，靠循环一步步逼近目标。", "en": "Long polishing work converges step by step through rounds." }
+    }
+  }
+}

@@ -1,0 +1,3 @@
+- insert:
+    - id: step-lens
+      name: '@local/step-lens'
